@@ -13,8 +13,8 @@ class ApiController extends Controller
         $user = 1;
         $messages = [];
         // students [1,2,3]
-        foreach ($request->students as $studentId){
-            $student = Student::find($studentId);
+        $students = Student::whereIn('id',$request->students)->get();
+        foreach ($students as $student){
             $channel = $student->channels()->whereHas('participants',function ($query) use ($user){
                 $query->where('user_id',$user);
             })->first();
