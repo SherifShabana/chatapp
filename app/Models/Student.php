@@ -2,14 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
 
-class Student extends Model
+class Student extends Authenticatable
 {
+    use HasApiTokens;
 
     protected $table = 'students';
     public $timestamps = true;
     protected $fillable = ['name', 'username', 'password', 'section_id'];
+
+    protected $hidden = [
+        'password'
+    ];
 
     public function channels()
     {
@@ -18,7 +24,12 @@ class Student extends Model
 
     public function groups()
     {
-        return $this->belongsToMany('Group');
+        return $this->belongsToMany(Group::class);
+    }
+
+    public function section()
+    {
+        return $this->belongsTo(Section::class);
     }
 
 }

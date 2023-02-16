@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Events\MessageSent;
+use App\Http\Controllers\Controller;
 use App\Models\Student;
 use Illuminate\Http\Request;
 
-class ApiController extends Controller
+class MainController extends Controller
 {
     public function sendMessage(Request $request)
     {

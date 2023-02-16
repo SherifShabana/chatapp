@@ -16,4 +16,9 @@ class Section extends Model
         return $this->hasMany(Student::class);
     }
 
+    public function yearLevel()
+    {
+        return $this->belongsTo(YearLevel::class);
+    }
+
 }

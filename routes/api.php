@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\ApiController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\MainController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,4 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::post('send-message',[ApiController::class,'sendMessage']);
+Route::post('send-message',[MainController::class,'sendMessage']);
+
+Route::post('student-login',[AuthController::class,'studentLogin']);
+Route::post('admin-login',[AuthController::class,'adminLogin']);
