@@ -20,7 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
 Route::post('send-message',[MainController::class,'sendMessage']);
 
 Route::post('student-login',[AuthController::class,'studentLogin']);
