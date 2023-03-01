@@ -3,6 +3,12 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\User;
+use App\Models\Section;
+use App\Models\Student;
+use App\Models\YearLevel;
+use App\Models\Department;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,46 +20,78 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        //Admins
+        User::factory()->create([
+            'name' => 'Dr.Bahaa Shabana',
+            'email' => 'tester@met.com',
+            'password' => bcrypt('123123'),
+            'role' => 1, //admin
+        ]);
 
-         \App\Models\User::factory()->create([
-             'name' => 'Test User',
-             'email' => 'test@example.com',
-             'password' => bcrypt('123123'),
-             'role' => 1,
-         ]);
+        User::factory()->create([
+            'name' => 'Mr.Ahmed Eldemoksy',
+            'email' => 'tester2@met.com',
+            'password' => bcrypt('123123'),
+            'role' => 1, //admin
+        ]);
 
-         \App\Models\Student::create([
-             'name' => 'Student 1',
-             'username' => 'std1',
-             'password' => bcrypt('123123'),
-             'section_id' => 1,
-         ]);
-         \App\Models\Student::create([
-             'name' => 'Student 1',
-             'username' => 'std2',
-             'password' => bcrypt('123123'),
-             'section_id' => 1,
-         ]);
-         \App\Models\Student::create([
-             'name' => 'Student 3',
-             'username' => 'std3',
-             'password' => bcrypt('123123'),
-             'section_id' => 1,
-         ]);
 
-         \App\Models\Section::create([
-             'name' => 'Section 1',
-             'year_level_id' => 1,
-         ]);
+        //Students
+        Student::create([
+            'name' => 'Eman Mohamed',
+            'username' => 'eman',
+            'password' => bcrypt('eman'),
+            'section_id' => 1,
+        ]);
+        Student::create([
+            'name' => 'Sherif Shabana',
+            'username' => 'sherif',
+            'password' => bcrypt('sherif'),
+            'section_id' => 3,
+        ]);
+        Student::create([
+            'name' => 'Abdelrahman Ebrahim',
+            'username' => 'abdelrahman',
+            'password' => bcrypt('abdelrahman'),
+            'section_id' => 3,
+        ]);
+        Student::create([
+            'name' => 'Rana Elsayed',
+            'username' => 'ranaa',
+            'password' => bcrypt('rana'),
+            'section_id' => 3,
+        ]);
+        Student::create([
+            'name' => 'Rana Alaa',
+            'username' => 'rana',
+            'password' => bcrypt('rana'),
+            'section_id' => 3,
+        ]);
 
-         \App\Models\YearLevel::create([
-             'name' => 'YL 1',
-             'department_id' => 1,
-         ]);
 
-         \App\Models\Department::create([
-             'name' => 'CS',
-         ]);
+        //Sections
+        Section::create([
+            'name' => 'Section 1',
+            'year_level_id' => 4,
+        ]);
+        Section::create([
+            'id' => '3',
+            'name' => 'Section 3',
+            'year_level_id' => 4,
+        ]);
+
+
+        //Year Level
+        YearLevel::create([
+            'id' => '4',
+            'name' => 'YL 4',
+            'department_id' => 1,
+        ]);
+
+
+        //Department
+        Department::create([
+            'name' => 'CS',
+        ]);
     }
 }
