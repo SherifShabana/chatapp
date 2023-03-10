@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::factory()->create([
-            'name' => 'Mr.Ahmed Eldemoksy',
+            'name' => 'AP.Ahmed Eldemoksy',
             'email' => 'tester2@met.com',
             'password' => bcrypt('123123'),
             'role' => 1, //admin
@@ -67,6 +67,9 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('rana'),
             'section_id' => 3,
         ]);
+        Student::factory(10)->create([
+            'password' => bcrypt('1234'),
+        ]);
 
 
         //Sections
@@ -79,6 +82,16 @@ class DatabaseSeeder extends Seeder
             'name' => 'Section 3',
             'year_level_id' => 4,
         ]);
+        Section::create([
+            'id' => '4',
+            'name' => 'Section 1',
+            'year_level_id' => 5,
+        ]);
+        Section::create([
+            'id' => '5',
+            'name' => 'Section 3',
+            'year_level_id' => 5,
+        ]);
 
 
         //Year Level
@@ -87,11 +100,19 @@ class DatabaseSeeder extends Seeder
             'name' => 'YL 4',
             'department_id' => 1,
         ]);
+        YearLevel::create([
+            'id' => '5',
+            'name' => 'YL 4',
+            'department_id' => 2,
+        ]);
 
 
         //Department
         Department::create([
             'name' => 'CS',
+        ]);
+        Department::create([
+            'name' => 'IT',
         ]);
     }
 }

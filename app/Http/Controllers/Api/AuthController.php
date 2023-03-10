@@ -20,21 +20,22 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        $student = Student::where('username',$request->username)->first();
-        if(!$student){
+        $student = Student::where('username', $request->username)->first();
+        if (!$student) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid username or password',
                 'data' => null
             ]);
         }
-        if(!Hash::check($request->password,$student->password)){
+        if (!Hash::check($request->password, $student->password)) { //*In hash the 2nd parameter is the one in the database
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid username or password',
                 'data' => null
             ]);
         }
+        $student->tokens()->delete();
         $token = $student->createToken('student')->plainTextToken;
         $student = $student->load('section.yearLevel.department');
         $response = [
@@ -55,21 +56,22 @@ class AuthController extends Controller
             'password' => 'required'
         ]);
 
-        $user = User::where('email',$request->email)->first();
-        if(!$user){
+        $user = User::where('email', $request->email)->first();
+        if (!$user) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid username or password',
                 'data' => null
             ]);
         }
-        if(!Hash::check($request->password,$user->password)){
+        if (!Hash::check($request->password, $user->password)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid username or password',
                 'data' => null
             ]);
         }
+        $user->tokens()->delete();
         $token = $user->createToken('admin')->plainTextToken;
         $response = [
             'status' => 'success',

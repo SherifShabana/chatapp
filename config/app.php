@@ -191,7 +191,7 @@ return [
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
+        // App\Providers\BroadcastServiceProvider::class, //*Why does this work even if it is still commented?
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
