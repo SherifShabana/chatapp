@@ -16,4 +16,9 @@ class Group extends Model
         return $this->belongsToMany(Student::class);
     }
 
+    public function channels()
+    {
+        return $this->morphMany(Channel::class, 'chattable');
+    }
+
 }

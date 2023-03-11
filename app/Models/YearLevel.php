@@ -21,4 +21,9 @@ class YearLevel extends Model
         return $this->belongsTo(Department::class);
     }
 
+    public function channels()
+    {
+        return $this->morphMany(Channel::class, 'chattable');
+    }
+
 }

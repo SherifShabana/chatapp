@@ -16,4 +16,9 @@ class Department extends Model
         return $this->hasMany(YearLevel::class);
     }
 
+    public function channels()
+    {
+        return $this->morphMany(Channel::class, 'chattable');
+    }
+
 }
