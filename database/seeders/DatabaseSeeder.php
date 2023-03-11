@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::factory()->create([
-            'name' => 'Mr.Ahmed Eldemoksy',
+            'name' => 'Eng.Ahmed Eldemoksy',
             'email' => 'tester2@met.com',
             'password' => bcrypt('123123'),
             'role' => 1, //admin
