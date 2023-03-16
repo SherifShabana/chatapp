@@ -14,16 +14,16 @@ class MainController extends Controller
         $user = 1;
         $messages = [];
         // students [1,2,3]
-        $students = Student::whereIn('id',$request->students)->get();
-        foreach ($students as $student){
-            $channel = $student->channels()->whereHas('participants',function ($query) use ($user){
-                $query->where('user_id',$user);
+        $students = Student::whereIn('id', $request->students)->get();
+        foreach ($students as $student) {
+            $channel = $student->channels()->whereHas('participants', function ($query) use ($user) {
+                $query->where('user_id', $user);
             })->first();
-            if (!$channel){
+            if (!$channel) {
                 $channel = $student->channels()->create([
                     'name' => $student->name,
                 ]);
-                $channel->participants()->attach($user);
+                $channel->participants()->attach($user); //TODO Check up on attach()
             }
             // have channel
 
@@ -33,7 +33,7 @@ class MainController extends Controller
             ]);
             $messages[] = $message;
 
-            MessageSent::dispatch($message->load('channel.participants','user'));
+            MessageSent::dispatch($message->load('channel.participants', 'user'));
         }
         // return response with success message
         return response()->json([
