@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Events\MessageSent;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\MessageResource;
 use App\Models\Student;
 use Illuminate\Http\Request;
 
@@ -39,7 +40,7 @@ class MainController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Message sent successfully',
-            'data' => $messages
+            'data' => MessageResource::collection($messages)
         ]);
     }
 }
