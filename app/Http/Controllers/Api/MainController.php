@@ -26,8 +26,8 @@ class MainController extends Controller
                 ]);
                 $channel->participants()->attach($user); //TODO Check up on attach()
             }
-            // have channel
 
+            // have channel
             $message = $channel->messages()->create([
                 'user_id' => $user,
                 'content' => $request->input('content'),

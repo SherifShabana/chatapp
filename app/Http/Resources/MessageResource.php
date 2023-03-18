@@ -17,12 +17,12 @@ class MessageResource extends JsonResource
         return [
             'id' => $this->id,
             'content' => $this->content,
-            'user_name' => $this->user->name ?? "",
             'user_id' => $this->user->id ?? "",
+            'user_name' => $this->user->name ?? "",
             'channel_id' => $this->channel->id ?? "",
             'channel_name' => $this->channel->name ?? "",
-            'channel' => $this->whenLoaded('channel', new ChannelResource($this->channel)),
-            'user' => $this->whenLoaded('user', new UserResource($this->user)),
+            /* 'channel' => $this->whenLoaded('channel', new ChannelResource($this->channel)),
+            'user' => $this->whenLoaded('user', new UserResource($this->user)), */
         ];
     }
 }

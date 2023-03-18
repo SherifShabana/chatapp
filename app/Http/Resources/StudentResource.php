@@ -22,7 +22,7 @@ class StudentResource extends JsonResource
             'section_name' => $this->section->name ?? "",
             'year_level_name' => $this->section->yearLevel->name ?? "",
             'department_name' => $this->section->yearLevel->department->name ?? "",
-            'section' => $this->whenLoaded('section', new SectionResource($this->section)),
+            /*  'section' => $this->whenLoaded('section', new SectionResource($this->section)), */
         ];
     }
 }
