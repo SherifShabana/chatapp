@@ -18,7 +18,11 @@ class StudentResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'username' => $this->username,
-            'section' => $this->whenLoaded('section', new SectionResource($this->section)),
+            'section_id' => $this->section->id ?? "",
+            'section_name' => $this->section->name ?? "",
+            'year_level_name' => $this->section->yearLevel->name ?? "",
+            'department_name' => $this->section->yearLevel->department->name ?? "",
+            /*  'section' => $this->whenLoaded('section', new SectionResource($this->section)), */
         ];
     }
 }
