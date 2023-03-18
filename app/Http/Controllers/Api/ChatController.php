@@ -10,6 +10,8 @@ use App\Models\Department;
 use App\Events\MessageSent;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\GroupResource;
+use App\Http\Resources\MessageResource;
 use Illuminate\Mail\Events\MessageSent as EventsMessageSent;
 
 class ChatController extends Controller
@@ -84,7 +86,7 @@ class ChatController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Message sent successfully',
-            'data' => $message
+            'data' => new MessageResource($message)
         ]);
     }
 
@@ -133,8 +135,8 @@ class ChatController extends Controller
             'status' => 'success',
             'message' => 'Group chat created successfully',
             'data' => [
-                'group' => $group,
-                'message' => $message,
+                'group' => new GroupResource($group),
+                'message' => new MessageResource($message),
             ],
         ]);
     }
@@ -148,34 +150,40 @@ class ChatController extends Controller
             'department_id' => 'required',
             'message' => 'required'
         ]);
+        $messages = [];
 
         if ($request->section_id) {
-            $section = Section::find($request->section_id);
-            //*Check if a channel already exists for this section 
-            $channel = $section->channels()->whereHas('participants', function ($query) {
-                $query->where('user_id', auth('sanctum')->user()->id);
-            })->first();
+            $sections = Section::find($request->section_id);
 
-            if (!$channel) {
-                $channel = $section->channels()->create([
-                    'name' => $section->name,
+            //* If there is an array of sections
+            foreach ($sections as $section) {
+                //*Check if a channel already exists for this section 
+                $channel = $section->channels()->whereHas('participants', function ($query) {
+                    $query->where('user_id', auth('sanctum')->user()->id);
+                })->first();
+
+                if (!$channel) {
+                    $channel = $section->channels()->create([
+                        'name' => $section->name,
+                    ]);
+                    $channel->participants()->attach(auth('sanctum')->user()->id);
+                }
+
+                //*Create a new message in the channel
+                $user = auth('sanctum')->user()->id;
+                $message = $channel->messages()->create([
+                    'user_id' => $user,
+                    'content' => $request->message
                 ]);
-                $channel->participants()->attach(auth('sanctum')->user()->id);
+
+                $messages[] = $message;
+                //*Push the message to the channel
+                MessageSent::dispatch($message->load('channel.participants'));
             }
-
-            //*Create a new message in the channel
-            $user = auth('sanctum')->user()->id;
-            $message = $channel->messages()->create([
-                'user_id' => $user,
-                'content' => $request->message
-            ]);
-            //*Push the message to the channel
-            MessageSent::dispatch($message->load('channel.participants'));
-
             return response()->json([
                 'status' => 'success',
                 'message' => 'Message sent successfully',
-                'data' => $message
+                'data' => MessageResource::collection($messages)
             ]);
         } elseif ($request->level_id) {
             $yLevel = YearLevel::find($request->level_id);
@@ -203,7 +211,7 @@ class ChatController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Message sent successfully',
-                'data' => $message
+                'data' => new MessageResource($message)
             ]);
         } else {
             $dept = Department::find($request->department_id);
@@ -232,7 +240,7 @@ class ChatController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Message sent successfully',
-                'data' => $message
+                'data' => new MessageResource($message)
             ]);
         }
     }
