@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\MainController;
+use App\Http\Controllers\Api\StudentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('create-single-chat', [ChatController::class, 'singleStudent']); //*Create chat with a single student
     Route::post('create-group', [ChatController::class, 'groupChat']); //*Create group chat
     Route::post('create-chat',[ChatController::class,'createChat']); //*Create a new chat
+
+    Route::get('chat-list',[StudentController::class, 'chatList']);
+    Route::get('channel-massages', [StudentController::class, 'channelMessages']);
 });
 
 Route::post('send-message',[MainController::class,'sendMessage']);
