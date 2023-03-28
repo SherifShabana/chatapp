@@ -30,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('chat-list',[StudentController::class, 'chatList']);
     Route::get('channel-massages', [StudentController::class, 'channelMessages']);
+    // test merge by rana
 });
 
 Route::post('send-message',[MainController::class,'sendMessage']);
