@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\MainController;
+use App\Http\Controllers\Api\StudentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('create-chat',[ChatController::class,'createChat']); //*Create a new chat
 });
 
+
+//*!Chat Lists
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('chat-list', [StudentController::class, 'chatList']); //*Get all chats sent by this specific admin
+    //*! Not working Route::get('channel-messages', [StudentController::class, 'channelMessages']);
+    // test merge by rana & abdullah
+});
+
+
+//*Send Message
 Route::post('send-message',[MainController::class,'sendMessage']);
 
 

@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\MessageResource;
+use App\Http\Resources\SectionResource;
+use App\Http\Resources\YearLevelResource;
+use App\Http\Resources\DepartmentResource;
 use Illuminate\Mail\Events\MessageSent as EventsMessageSent;
 
 class ChatController extends Controller
@@ -183,7 +186,8 @@ class ChatController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Message sent successfully',
-                'data' => MessageResource::collection($messages)
+                'data' => MessageResource::collection($messages),
+                'Sections' => SectionResource::collection($sections)
             ]);
         } elseif ($request->level_id) {
             $yLevel = YearLevel::find($request->level_id);
@@ -211,7 +215,8 @@ class ChatController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Message sent successfully',
-                'data' => new MessageResource($message)
+                'data' => new MessageResource($message),
+                'Year Level' => new YearLevelResource($yLevel)
             ]);
         } else {
             $dept = Department::find($request->department_id);
@@ -240,7 +245,8 @@ class ChatController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Message sent successfully',
-                'data' => new MessageResource($message)
+                'data' => new MessageResource($message),
+                'Department' => new DepartmentResource($dept)
             ]);
         }
     }
