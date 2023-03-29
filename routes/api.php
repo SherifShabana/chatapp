@@ -27,12 +27,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('create-single-chat', [ChatController::class, 'singleStudent']); //*Create chat with a single student
     Route::post('create-group', [ChatController::class, 'groupChat']); //*Create group chat
     Route::post('create-chat',[ChatController::class,'createChat']); //*Create a new chat
+});
 
-    Route::get('chat-list',[StudentController::class, 'chatList']);
-    Route::get('channel-massages', [StudentController::class, 'channelMessages']);
+
+//*!Chat Lists
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('chat-list', [StudentController::class, 'chatList']); //*Get all chats sent by this specific admin
+    //*! Not working Route::get('channel-messages', [StudentController::class, 'channelMessages']);
     // test merge by rana & abdullah
 });
 
+
+//*Send Message
 Route::post('send-message',[MainController::class,'sendMessage']);
 
 
