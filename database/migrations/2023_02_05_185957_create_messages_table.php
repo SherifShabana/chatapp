@@ -9,7 +9,7 @@ class CreateMessagesTable extends Migration {
 	public function up()
 	{
 		Schema::create('messages', function(Blueprint $table) {
-			$table->increments('id');
+			$table->increments('id')->unsigned();
 			$table->timestamps();
 			$table->integer('channel_id');
 			$table->text('content');

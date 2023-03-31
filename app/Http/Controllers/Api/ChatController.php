@@ -15,6 +15,7 @@ use App\Http\Resources\MessageResource;
 use App\Http\Resources\SectionResource;
 use App\Http\Resources\YearLevelResource;
 use App\Http\Resources\DepartmentResource;
+use App\Models\Message;
 use Illuminate\Mail\Events\MessageSent as EventsMessageSent;
 
 class ChatController extends Controller
@@ -249,5 +250,51 @@ class ChatController extends Controller
                 'Department' => new DepartmentResource($dept)
             ]);
         }
+    }
+
+    //Create a function to toggle messages for a specific student
+    public function starMessage(Request $request)
+    {
+        $request->validate([
+            'student_id' => 'required',
+        ]);
+
+        $student = Student::find($request->student_id);
+        $message = Message::find($request->message_id);
+
+        if ($student && $message) {
+            $student->messages()->toggle($message->id);
+            $student->save(); //*Save the message in the database
+
+            //*Check if the message is starred
+            $isStarred = $student->messages()->where('id', $message->id)->exists();
+            if ($isStarred) {
+                $status = 'Message Starred';
+            } else {
+                $status = 'Message Unstarred';
+            }
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => $status,
+            'data' => new MessageResource($message)
+        ]);
+    }
+
+    //Create a function that shows starred messages
+    public function starredMessages(Request $request)
+    {
+        $request->validate([
+            'student_id' => 'required',
+        ]);
+        $student = Student::find($request->student_id);
+        $messages = $student->messages()->get();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Starred Messages',
+            'data' => MessageResource::collection($messages)
+        ]);
     }
 }

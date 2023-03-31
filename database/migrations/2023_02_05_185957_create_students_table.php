@@ -9,7 +9,7 @@ class CreateStudentsTable extends Migration {
 	public function up()
 	{
 		Schema::create('students', function(Blueprint $table) {
-			$table->increments('id');
+			$table->increments('id')->unsigned();
 			$table->timestamps();
 			$table->string('name');
             $table->string('username')->unique();
