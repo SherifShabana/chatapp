@@ -33,4 +33,9 @@ class Student extends Authenticatable
         return $this->belongsTo(Section::class);
     }
 
+    public function messages()
+    {
+        return $this->belongsToMany(Message::class);
+    }
+
 }
