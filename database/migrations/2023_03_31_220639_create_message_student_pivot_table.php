@@ -15,9 +15,9 @@ class CreateMessageStudentPivotTable extends Migration
     {
         Schema::create('message_student', function (Blueprint $table) {
             $table->unsignedInteger('message_id')->index();
-            $table->foreign('message_id')->references('id')->on('message')->onDelete('cascade');
+            $table->foreign('message_id')->references('id')->on('messages')->onDelete('cascade');
             $table->unsignedInteger('student_id')->index();
-            $table->foreign('student_id')->references('id')->on('student')->onDelete('cascade');
+            $table->foreign('student_id')->references('id')->on('students')->onDelete('cascade');
             $table->primary(['message_id', 'student_id']);
         });
     }

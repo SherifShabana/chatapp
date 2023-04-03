@@ -282,10 +282,7 @@ class ChatController extends Controller
     //Create a function that shows starred messages
     public function starredMessages(Request $request)
     {
-        $request->validate([
-            'student_id' => 'required',
-        ]);
-        $student = Student::find($request->student_id);
+        $student = $request->user();
         $messages = $student->messages()->get();
 
         return response()->json([

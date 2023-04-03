@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class YearLevel extends Model
 {
+    use HasFactory;
 
     protected $table = 'year_levels';
     public $timestamps = true;

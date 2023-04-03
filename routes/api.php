@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\MainController;
@@ -32,9 +33,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
 //*Students (Chat Lists)
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('chat-list', [StudentController::class, 'chatList']); //*Get all chats with this specific student
+    Route::get('student-chats', [StudentController::class, 'chatList']); //*Get all chats with this specific student
+    Route::get('admin-chats', [AdminController::class, 'adminChats']); //*Get all chats with this specific admin
+
     Route::get('channel-messages', [StudentController::class, 'channelMessages']); //*Get messages within the chat
-    // test merge by rana & abdullah
+
 
     //*Star (Favorite Functionality)
     Route::post('star-message', [ChatController::class, 'starMessage']); //*Star a message
