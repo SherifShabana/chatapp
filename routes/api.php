@@ -39,14 +39,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
 /* //*Admins (Chat Lists)
 Route::middleware('auth:sanctum')->group(function () {
-    
+
 });
  */
 
 
 //!Star (Favorite Functions)
 Route::post('star-message', [ChatController::class, 'starMessage']); //*Star a message
-Route::get('starred-messages', [ChatController::class, 'starredMessages']); //*Get all starred messages 
+Route::get('starred-messages', [ChatController::class, 'starredMessages']); //*Get all starred messages
 
 
 //*Send Message
@@ -60,3 +60,8 @@ Route::post('admin-login', [AuthController::class, 'adminLogin']);
 
 //*Filter
 Route::post('student-search', [ChatController::class, 'getStudents']);
+
+
+Route::get('departments', [MainController::class, 'departments']);
+Route::get('year-levels', [MainController::class, 'yearLevels']);
+Route::get('sections', [MainController::class, 'sections']);
