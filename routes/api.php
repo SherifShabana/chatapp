@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ChatController;
 use App\Http\Controllers\Api\MainController;
@@ -32,21 +33,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
 //*Students (Chat Lists)
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('chat-list', [StudentController::class, 'chatList']); //*Get all chats with this specific student
+    Route::get('student-chats', [StudentController::class, 'chatList']); //*Get all chats with this specific student
+    Route::get('admin-chats', [AdminController::class, 'adminChats']); //*Get all chats with this specific admin
+
     Route::get('channel-messages', [StudentController::class, 'channelMessages']); //*Get messages within the chat
-    // test merge by rana & abdullah
+
+
+    //*Star (Favorite Functionality)
+    Route::post('star-message', [ChatController::class, 'starMessage']); //*Star a message
+    Route::get('starred-messages', [ChatController::class, 'starredMessages']); //*Get all starred messages
 });
-
-/* //*Admins (Chat Lists)
-Route::middleware('auth:sanctum')->group(function () {
-    
-});
- */
-
-
-//!Star (Favorite Functions)
-Route::post('star-message', [ChatController::class, 'starMessage']); //*Star a message
-Route::get('starred-messages', [ChatController::class, 'starredMessages']); //*Get all starred messages 
 
 
 //*Send Message
@@ -60,3 +56,9 @@ Route::post('admin-login', [AuthController::class, 'adminLogin']);
 
 //*Filter
 Route::post('student-search', [ChatController::class, 'getStudents']);
+
+
+//*Get a list of the following
+Route::get('departments', [MainController::class, 'departments']);
+Route::get('year-levels', [MainController::class, 'yearLevels']);
+Route::get('sections', [MainController::class, 'sections']);

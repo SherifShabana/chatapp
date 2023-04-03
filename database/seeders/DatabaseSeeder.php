@@ -9,6 +9,7 @@ use App\Models\Section;
 use App\Models\Student;
 use App\Models\YearLevel;
 use App\Models\Department;
+use Database\Factories\YearLevelFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,7 +21,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        //Admins
+        //*Admins
+        /* 
         User::factory()->create([
             'name' => 'Dr.Bahaa Shabana',
             'email' => 'tester@met.com',
@@ -33,86 +35,98 @@ class DatabaseSeeder extends Seeder
             'email' => 'tester2@met.com',
             'password' => bcrypt('123123'),
             'role' => 1, //admin
-        ]);
+        ]); */
 
 
-        //Students
+
+        //*Students
+        /*  
         Student::create([
             'name' => 'Eman Mohamed',
             'username' => 'eman',
             'password' => bcrypt('eman'),
-            'section_id' => 1,
+            'section_id' => 10,
         ]);
         Student::create([
             'name' => 'Sherif Shabana',
             'username' => 'sherif',
             'password' => bcrypt('sherif'),
-            'section_id' => 3,
+            'section_id' => 34,
         ]);
         Student::create([
             'name' => 'Abdelrahman Ebrahim',
             'username' => 'abdelrahman',
             'password' => bcrypt('abdelrahman'),
-            'section_id' => 3,
+            'section_id' => 34,
         ]);
         Student::create([
             'name' => 'Rana Elsayed',
             'username' => 'ranaa',
             'password' => bcrypt('rana'),
-            'section_id' => 3,
+            'section_id' => 34,
         ]);
         Student::create([
             'name' => 'Rana Alaa',
             'username' => 'rana',
             'password' => bcrypt('rana'),
-            'section_id' => 3,
-        ]);
-        Student::factory(10)->create([
-            'password' => bcrypt('1234'),
-        ]);
+            'section_id' => 34,
+        ]); */
 
 
-        //Sections
-        Section::create([
+        //*Sections
+        /* 
+        Section::factory(12)->create([
             'name' => 'Section 1',
-            'year_level_id' => 4,
-        ]);
-        Section::create([
-            'id' => '3',
+        ]); 
+        Section::factory(12)->create([
+            'name' => 'Section 2',
+        ]); 
+        Section::factory(12)->create([
             'name' => 'Section 3',
-            'year_level_id' => 4,
-        ]);
-        Section::create([
-            'id' => '4',
-            'name' => 'Section 1',
-            'year_level_id' => 5,
-        ]);
-        Section::create([
-            'id' => '5',
-            'name' => 'Section 3',
-            'year_level_id' => 5,
-        ]);
+        ]); 
+        Section::factory(12)->create([
+            'name' => 'Section 4',
+        ]); 
+        Section::factory(12)->create([
+            'name' => 'Section 5',
+        ]); 
+        Section::factory(12)->create([
+            'name' => 'Section 6',
+        ]); 
+        Section::factory(12)->create([
+            'name' => 'Section 7',
+        ]); 
+        Section::factory(12)->create([
+            'name' => 'Section 8',
+        ]); 
+        */
 
 
-        //Year Level
-        YearLevel::create([
-            'id' => '4',
-            'name' => 'YL 4',
-            'department_id' => 1,
-        ]);
-        YearLevel::create([
-            'id' => '5',
-            'name' => 'YL 4',
-            'department_id' => 2,
-        ]);
 
+        //*Year Level
+        /* 
+        YearLevel::factory(3)->create([
+            'name' => 'Year Level 1',
+        ]);
+        YearLevel::factory(3)->create([
+            'name' => 'Year Level 2',
+        ]);
+        YearLevel::factory(3)->create([
+            'name' => 'Year Level 3',
+        ]);
+        YearLevel::factory(3)->create([
+            'name' => 'Year Level 4',
+        ]); */
 
-        //Department
+        //*Department
+        /* Department::create([
+            'name' => 'Computer Science',
+        ]);
         Department::create([
-            'name' => 'CS',
+            'name' => 'Information Systems',
         ]);
         Department::create([
-            'name' => 'IT',
-        ]);
+            'name' => 'Accounting',
+        ]); */
     }
 }
