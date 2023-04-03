@@ -255,11 +255,8 @@ class ChatController extends Controller
     //Create a function to toggle messages for a specific student
     public function starMessage(Request $request)
     {
-        $request->validate([
-            'student_id' => 'required',
-        ]);
 
-        $student = Student::find($request->student_id);
+        $student = $request->user();
         $message = Message::find($request->message_id);
 
         if ($student && $message) {
