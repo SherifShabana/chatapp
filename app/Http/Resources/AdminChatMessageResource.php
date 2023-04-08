@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ChannelResource extends JsonResource
+class AdminChatMessageResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,7 +17,7 @@ class ChannelResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'unseen' => $this->unseenmessages_count ?? 0,
+            'created_at' => $this->created_at->format("H:i a") ?? "", //7:30 am
             'last_message' => new ChatMessageResource($this->lastmessage) ?? null,
         ];
     }

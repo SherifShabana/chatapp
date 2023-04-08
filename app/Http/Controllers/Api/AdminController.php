@@ -3,14 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
-use App\Models\Student;
 use App\Models\Group;
-use App\Models\Department;
-use App\Models\YearLevel;
-use App\Models\Section;
 use App\Models\Channel;
+use App\Models\Section;
+use App\Models\Student;
+use App\Models\YearLevel;
+use App\Models\Department;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AdminChatMessageResource;
+use App\Http\Resources\ChannelResource;
 use Illuminate\Database\Eloquent\Builder;
 
 
@@ -21,10 +23,13 @@ class AdminController extends Controller
     {
        $user = $request->user();
 
-       $channels = Channel::whereHas('participants', function (Builder $query) use ($user) {
+       $channels = Channel::with(['lastmessage'])->whereHas('participants', function (Builder $query) use ($user) {
         $query->where('users.id', $user->id);
        })->get();
 
-       return response()->json($channels);
+        return response()->json([
+            'status' => 'success',
+            'chats' => AdminChatMessageResource::collection($channels)
+        ]);
     }
 }
