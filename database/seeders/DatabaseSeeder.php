@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         //*Admins
-        /* 
+      /*
         User::factory()->create([
             'name' => 'Dr.Bahaa Shabana',
             'email' => 'tester@met.com',
@@ -35,12 +35,12 @@ class DatabaseSeeder extends Seeder
             'email' => 'tester2@met.com',
             'password' => bcrypt('123123'),
             'role' => 1, //admin
-        ]); */
+        ]);
 
 
 
         //*Students
-        /*  
+         
         Student::create([
             'name' => 'Eman Mohamed',
             'username' => 'eman',
@@ -57,7 +57,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Abdelrahman Ebrahim',
             'username' => 'abdelrahman',
             'password' => bcrypt('abdelrahman'),
-            'section_id' => 34,
+            'section_id' => 34, 
         ]);
         Student::create([
             'name' => 'Rana Elsayed',
@@ -70,12 +70,12 @@ class DatabaseSeeder extends Seeder
             'username' => 'rana',
             'password' => bcrypt('rana'),
             'section_id' => 34,
-        ]); */
+        ]);*/
 
 
         //*Sections
-        /* 
-        Section::factory(12)->create([
+        
+       /* Section::factory(12)->create([
             'name' => 'Section 1',
         ]); 
         Section::factory(12)->create([
@@ -84,7 +84,7 @@ class DatabaseSeeder extends Seeder
         Section::factory(12)->create([
             'name' => 'Section 3',
         ]); 
-        Section::factory(12)->create([
+       Section::factory(12)->create([
             'name' => 'Section 4',
         ]); 
         Section::factory(12)->create([
@@ -95,16 +95,16 @@ class DatabaseSeeder extends Seeder
         ]); 
         Section::factory(12)->create([
             'name' => 'Section 7',
-        ]); 
+        ]); */
         Section::factory(12)->create([
             'name' => 'Section 8',
         ]); 
-        */
+        
 
 
 
         //*Year Level
-        /* 
+      /*  
         YearLevel::factory(3)->create([
             'name' => 'Year Level 1',
         ]);
@@ -116,8 +116,8 @@ class DatabaseSeeder extends Seeder
         ]);
         YearLevel::factory(3)->create([
             'name' => 'Year Level 4',
-        ]); */
-
+        ]); 
+*/
         //*Department
         /* Department::create([
             'name' => 'Computer Science',
