@@ -16,6 +16,16 @@ class Channel extends Model
         return $this->hasMany(Message::class);
     }
 
+    public function lastmessage()
+    {
+        return $this->hasOne(Message::class)->latestOfMany();
+    }
+
+    public function unseenmessages()
+    {
+        return $this->hasMany(Message::class)->where('seen', false);
+    }
+
     public function chattable()
     {
         return $this->morphTo();

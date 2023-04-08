@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MessageResource extends JsonResource
+class ChatMessageResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,10 +19,7 @@ class MessageResource extends JsonResource
             'content' => $this->content,
             'user_id' => $this->user->id ?? "",
             'user_name' => $this->user->name ?? "",
-            'channel_id' => $this->channel->id ?? "",
-            'channel_name' => $this->channel->name ?? "",
-            'created_at' => $this->created_at ->format("H:i a") ?? "" //7:30 am
-            
+            'created_at' => $this->created_at->format("H:i a") ?? "" //7:30 am
             /* 'channel' => $this->whenLoaded('channel', new ChannelResource($this->channel)),
             'user' => $this->whenLoaded('user', new UserResource($this->user)), */
         ];

@@ -188,7 +188,7 @@ class ChatController extends Controller
                 'status' => 'success',
                 'message' => 'Message sent successfully',
                 'data' => MessageResource::collection($messages),
-                'Sections' => SectionResource::collection($sections)
+                'sections' => SectionResource::collection($sections)
             ]);
         } elseif ($request->level_id) {
             $yLevel = YearLevel::find($request->level_id);
@@ -217,7 +217,7 @@ class ChatController extends Controller
                 'status' => 'success',
                 'message' => 'Message sent successfully',
                 'data' => new MessageResource($message),
-                'Year Level' => new YearLevelResource($yLevel)
+                'year_level' => new YearLevelResource($yLevel)
             ]);
         } else {
             $dept = Department::find($request->department_id);
@@ -247,7 +247,7 @@ class ChatController extends Controller
                 'status' => 'success',
                 'message' => 'Message sent successfully',
                 'data' => new MessageResource($message),
-                'Department' => new DepartmentResource($dept)
+                'department' => new DepartmentResource($dept)
             ]);
         }
     }

@@ -14,6 +14,7 @@ class CreateMessagesTable extends Migration {
 			$table->integer('channel_id');
 			$table->text('content');
 			$table->integer('user_id');
+			$table->boolean('seen')->default(0);
 		});
 	}
 
