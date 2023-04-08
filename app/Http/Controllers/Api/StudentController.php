@@ -75,7 +75,7 @@ class studentController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'chats' => ChannelRحesource::collection($channels)
+            'chats' => ChannelResource::collection($channels)
         ]);
     }
 
