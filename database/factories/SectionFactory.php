@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class SectionFactory extends Factory
 {
+    private static $yearLevelId = 1;
     /**
      * Define the model's default state.
      *
@@ -16,9 +17,12 @@ class SectionFactory extends Factory
      */
     public function definition()
     {
+        if(self::$yearLevelId == 13){
+            self::$yearLevelId = 1;
+        }
         return [
             'name' => fake()->name(),
-            'year_level_id' => fake()->unique()->numberBetween(1, 12)
+            'year_level_id' => self::$yearLevelId++
         ];
     }
 }
