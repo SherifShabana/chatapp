@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ChannelResource;
-use App\Http\Resources\MessageResource;
+use App\Http\Resources\ChatMessageResource;
 
 class studentController extends Controller
 {
@@ -79,18 +79,30 @@ class studentController extends Controller
         ]);
     }
 
+
+    //*Retrieves the messages for the given channel and updates their "seen" field to true.
     public function channelMessages(Request $request)
     {
-
+        //*Find the channel with the given ID
         $channel = Channel::find($request->channel_id);
+
+        //*If the channel does not exist, return an error response
         if (!$channel) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Channel not found'
             ]);
         }
+
+        //*Update the "seen" field of the unseen messages in the channel to true
+        $channel->unseenmessages()->update(['seen' => true]);
+
+        //*Retrieve all the messages for the channel
         $messages = $channel->messages()->get();
 
-        return response()->json($messages);
+        return response()->json([
+            'status' => 'success',
+            'messages' => ChatMessageResource::collection($messages)
+        ]);
     }
 }

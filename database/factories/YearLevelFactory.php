@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class YearLevelFactory extends Factory
 {
+
+    private static $deptid = 1;
     /**
      * Define the model's default state.
      *
@@ -16,9 +18,13 @@ class YearLevelFactory extends Factory
      */
     public function definition()
     {
+        if (self::$deptid == 4) {
+            self::$deptid = 1;
+        }
+
         return [
             'name' => fake()->name(),
-            'department_id' => fake()->numberBetween(1,3),
+            'department_id' => self::$deptid++,
         ];
     }
 }
