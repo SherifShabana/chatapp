@@ -46,7 +46,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 //*Send Message
-Route::post('send-message', [MainController::class, 'sendMessage']);
+Route::post('send-message', [MainController::class, 'sendMessage']);//*Currently a demo
 
 
 //*Logins

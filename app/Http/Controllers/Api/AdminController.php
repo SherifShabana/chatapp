@@ -15,17 +15,22 @@ use App\Http\Resources\AdminChatMessageResource;
 use App\Http\Resources\ChannelResource;
 use Illuminate\Database\Eloquent\Builder;
 
-
 class AdminController extends Controller
 {
     //Get all chats for a specific admin
     public function adminChats(Request $request)
     {
-       $user = $request->user();
+        $request->validate([
+            'keyword' => ['nullable', 'string', 'min:3'],
+        ]);
 
-       $channels = Channel::with(['lastmessage'])->whereHas('participants', function (Builder $query) use ($user) {
-        $query->where('users.id', $user->id);
-       })->get();
+        $user = $request->user();
+
+        $channels = Channel::when($request->keyword, function ($query) use ($request) {
+            $query->where('name', 'like', "%$request->keyword%");
+        })->with(['lastmessage'])->whereHas('participants', function (Builder $query) use ($user) {
+            $query->where('users.id', $user->id);
+        })->get();
 
         return response()->json([
             'status' => 'success',

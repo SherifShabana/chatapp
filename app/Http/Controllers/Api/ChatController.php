@@ -105,9 +105,12 @@ class ChatController extends Controller
         ]);
 
         //Create the group if it doesn't exist
-        $group = Group::create([
-            'name' => $request->group_name,
-        ]);
+        $group = Group::where('name', $request->group_name)->first();
+        if (!$group) {
+            $group = Group::create([
+                'name' => $request->group_name
+            ]);
+        }
 
         //* Check if a channel already exists for this group 
         $channel = $group->channels()->whereHas('participants', function ($query) {
