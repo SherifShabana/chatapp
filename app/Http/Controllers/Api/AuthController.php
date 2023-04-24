@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    //!Student Login
     public function studentLogin(Request $request): JsonResponse
     {
         $request->validate([
@@ -49,6 +50,7 @@ class AuthController extends Controller
         return response()->json($response);
     }
 
+    //!Admin Login
     public function adminLogin(Request $request): JsonResponse
     {
         $request->validate([

@@ -148,8 +148,6 @@ class ChatController extends Controller
         ]);
     }
 
-
-
     //!Create a chat for a new department or array of section or year levels
     public function createChat(Request $request)
     {
@@ -255,10 +253,9 @@ class ChatController extends Controller
         }
     }
 
-    //Create a function to toggle messages for a specific student
+    //!Create a function to toggle messages for a specific student
     public function starMessage(Request $request)
     {
-
         $student = $request->user();
         $message = Message::find($request->message_id);
 
@@ -282,7 +279,7 @@ class ChatController extends Controller
         ]);
     }
 
-    //Create a function that shows starred messages
+    //!Create a function that shows starred messages
     public function starredMessages(Request $request)
     {
         $student = $request->user();
@@ -293,5 +290,34 @@ class ChatController extends Controller
             'message' => 'Starred Messages',
             'data' => MessageResource::collection($messages)
         ]);
+    }
+
+    //!Create a function that deletes a message
+    public function deleteMsg(Request $request)
+    {
+        //*Retrieve the authenticated user and the message specified by the request's message_id.
+        $user = $request->user();
+        $message = Message::find($request->message_id);
+
+        //*Check if the user is authenticated and if the message exists.
+        if (!$user || !$message) {
+
+            //*If either the user or the message is not found, an error response is returned.
+            return response()->json([
+                'status' => 'error',
+                'message' => 'message not found or user not authorized',
+            ]);
+        }
+
+        //*If the user and the message exist, and if the user is the owner of the message.
+        if ($user && $message && $user->id == $message->user_id
+        ) {
+            //*The message is deleted and a success response is returned.
+            $message->delete();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'message deleted'
+            ]);
+        }
     }
 }

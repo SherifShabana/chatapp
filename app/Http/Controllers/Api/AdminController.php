@@ -17,20 +17,21 @@ use Illuminate\Database\Eloquent\Builder;
 
 class AdminController extends Controller
 {
-    //Get all chats for a specific admin
+    //!Get all chats for a specific admin
     public function adminChats(Request $request)
     {
         $request->validate([
-            'keyword' => ['nullable', 'string', 'min:3'],
+            'key' => ['filled', 'string', 'min:3']
         ]);
 
         $user = $request->user();
 
-        $channels = Channel::when($request->keyword, function ($query) use ($request) {
-            $query->where('name', 'like', "%$request->keyword%");
+        $channels = Channel::when($request->key, function ($query) use ($request) {
+            $query->where('name', 'like', "%$request->key%");
         })->with(['lastmessage'])->whereHas('participants', function (Builder $query) use ($user) {
             $query->where('users.id', $user->id);
         })->get();
+
 
         return response()->json([
             'status' => 'success',
