@@ -23,25 +23,28 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//*Chat creation routes
+//*Admin functions
 Route::middleware('auth:sanctum')->group(function () {
+    //*Create chats
     Route::post('create-single-chat', [ChatController::class, 'singleStudent']); //*Create chat with a single student
     Route::post('create-group', [ChatController::class, 'groupChat']); //*Create group chat
     Route::post('create-chat', [ChatController::class, 'createChat']); //*Create a new chat
+
+    Route::get('admin-chats', [AdminController::class, 'adminChats']); //*Get all chats with this specific admin
 });
 
 
-//*Students (Chat Lists)
+//*Student functions
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('student-chats', [StudentController::class, 'chatList']); //*Get all chats with this specific student
-    Route::get('admin-chats', [AdminController::class, 'adminChats']); //*Get all chats with this specific admin
-
     Route::get('channel-messages', [StudentController::class, 'channelMessages']); //*Get messages within the chat
-
 
     //*Star (Favorite Functionality)
     Route::post('star-message', [ChatController::class, 'starMessage']); //*Star a message
     Route::get('starred-messages', [ChatController::class, 'starredMessages']); //*Get all starred messages
+
+    //*Delete message
+    Route::post('delete-message', [ChatController::class, 'deleteMsg']); //*Delete a message
 });
 
 
@@ -50,15 +53,15 @@ Route::post('send-message', [MainController::class, 'sendMessage']);//*Currently
 
 
 //*Logins
-Route::post('student-login', [AuthController::class, 'studentLogin']);
-Route::post('admin-login', [AuthController::class, 'adminLogin']);
+Route::post('student-login', [AuthController::class, 'studentLogin']);//*Student login
+Route::post('admin-login', [AuthController::class, 'adminLogin']);//*Admin login
 
 
 //*Filter
-Route::post('student-search', [ChatController::class, 'getStudents']);
+Route::post('student-search', [ChatController::class, 'getStudents']);//*Search for a student
 
 
 //*Get a list of the following
-Route::get('departments', [MainController::class, 'departments']);
-Route::get('year-levels', [MainController::class, 'yearLevels']);
-Route::get('sections', [MainController::class, 'sections']);
+Route::get('departments', [MainController::class, 'departments']);//*Get all departments
+Route::get('year-levels', [MainController::class, 'yearLevels']);//*Get all year levels
+Route::get('sections', [MainController::class, 'sections']);//*Get all sections

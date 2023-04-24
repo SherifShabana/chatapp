@@ -16,18 +16,7 @@ use App\Http\Resources\ChatMessageResource;
 
 class studentController extends Controller
 {
-    /* public function getUsers()
-    {
-
-        $student = Student::orderby('id', 'asc')->select('*')->get();
-
-        // Fetch all records
-        $response['data'] = $student;
-
-        return response()->json($response);
-    } */
-
-
+    //!Get all Student Chats
     public function chatList(Request $request)
     {
 
@@ -80,7 +69,7 @@ class studentController extends Controller
     }
 
 
-    //*Retrieves the messages for the given channel and updates their "seen" field to true.
+    //!Retrieves the messages for the given channel and updates their "seen" field to true.
     public function channelMessages(Request $request)
     {
         //*Find the channel with the given ID

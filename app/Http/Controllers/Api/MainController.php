@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 class MainController extends Controller
 {
 
-    //*Get all departments
+    //!Get all departments
     public function departments(Request $request)
     {
         $departments = Department::all();
@@ -28,7 +28,7 @@ class MainController extends Controller
         ]);
     }
 
-    //*Get all years
+    //!Get all years
     public function yearLevels(Request $request)
     {
         $request->validate([
@@ -42,7 +42,7 @@ class MainController extends Controller
         ]);
     }
 
-    //*Get all sections
+    //!Get all sections
     public function sections(Request $request)
     {
         $request->validate([
@@ -56,7 +56,7 @@ class MainController extends Controller
         ]);
     }
 
-    //*Send a message
+    //!Send a message
     public function sendMessage(Request $request)
     {
         $user = 1;
