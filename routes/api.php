@@ -49,19 +49,19 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 //*Send Message
-Route::post('send-message', [MainController::class, 'sendMessage']);//*Currently a demo
+Route::post('send-message', [MainController::class, 'sendMessage']); //*Currently a demo
 
 
 //*Logins
-Route::post('student-login', [AuthController::class, 'studentLogin']);//*Student login
-Route::post('admin-login', [AuthController::class, 'adminLogin']);//*Admin login
+Route::post('student-login', [AuthController::class, 'studentLogin']); //*Student login
+Route::post('admin-login', [AuthController::class, 'adminLogin']); //*Admin login
 
 
 //*Filter
-Route::post('student-search', [ChatController::class, 'getStudents']);//*Search for a student
+Route::post('student-search', [ChatController::class, 'getStudents']); //*Search for a student
 
 
 //*Get a list of the following
-Route::get('departments', [MainController::class, 'departments']);//*Get all departments
-Route::get('year-levels', [MainController::class, 'yearLevels']);//*Get all year levels
+Route::get('departments', [MainController::class, 'departments']); //*Get all departments
+Route::get('year-levels', [MainController::class, 'yearLevels']); //*Get all year levels
 Route::get('sections', [MainController::class, 'sections']);//*Get all sections

@@ -38,7 +38,6 @@ class AuthController extends Controller
         }
         $student->tokens()->delete();
         $token = $student->createToken('student')->plainTextToken;
-        /* $student = $student->load('section.yearLevel.department'); */
         $response = [
             'status' => 'success',
             'message' => 'Login successfully',
