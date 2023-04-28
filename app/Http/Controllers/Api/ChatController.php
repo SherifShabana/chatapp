@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Group;
+use App\Models\Message;
 use App\Models\Section;
 use App\Models\Student;
 use App\Models\YearLevel;
@@ -13,10 +14,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\MessageResource;
 use App\Http\Resources\SectionResource;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\YearLevelResource;
 use App\Http\Resources\DepartmentResource;
-use App\Models\Message;
-use Illuminate\Mail\Events\MessageSent as EventsMessageSent;
+use Illuminate\Support\Str;
 
 class ChatController extends Controller
 {
@@ -54,17 +55,18 @@ class ChatController extends Controller
 
 
     //!Single Student Chat
+
     public function singleStudent(Request $request)
     {
         $request->validate([
             'student_id' => 'required',
-            'message' => 'required'
+            'message' => 'nullable',
+            'file' => 'nullable|file|max:52428800'
         ]);
 
-        // TODO check if it better to just use findorFail instead
-        $student = Student::find($request->student_id); // TODO check what is the reason for using the first() method
+        $student = Student::find($request->student_id);
 
-        //* Check if a channel already exists for this student 
+        //*Check if a channel already exists for this student 
         $channel = $student->channels()->whereHas('participants', function ($query) {
             $query->where('user_id', auth('sanctum')->user()->id);
         })->first();
@@ -77,20 +79,52 @@ class ChatController extends Controller
             $channel->participants()->attach(auth('sanctum')->user()->id);
         }
 
-        //*Create a new message in the channel
         $user = auth('sanctum')->user()->id;
-        $message = $channel->messages()->create([
+
+        //*Store the uploaded file
+        $fileUrl = null;
+        $messageType = 1; //*Initialize the message type as 1
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileUrl = $file->storeAs('uploads', $file->hashName(), 'public');
+
+            //*Update the message type based on the uploaded file's MIME type
+            $mimeType = $file->getMimeType();
+            if (str_starts_with($mimeType, 'image/')) {
+                $messageType = 2; //*Photo
+            } elseif (str_starts_with($mimeType, 'application/')) {
+                $messageType = 3; //*Document
+            }
+        }
+
+        //*Check for a link
+        if (Str::contains($request->message, 'https://') || Str::contains($request->message, 'http://')) {
+            $messageType = 4; //*Link
+        }
+
+        $messageData = [
             'user_id' => $user,
-            'content' => $request->message
-        ]);
+            'content' => $request->message,
+            'file_url' => $fileUrl //*Store the file URL in the message
+        ];
+
+        if (
+            $messageType !== null
+        ) {
+            $messageData['type'] = $messageType; //*Update the message type only if it's not null
+        }
+
+        //*Create a new message in the channel
+        $message = $channel->messages()->create($messageData);
 
         //*Push the message to the channel
         MessageSent::dispatch($message->load('channel.participants'));
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Message sent successfully',
-            'data' => new MessageResource($message)
+            'message' => 'Message sent',
+            'data' => new MessageResource($message),
+            'file' => url(Storage::url($fileUrl))
         ]);
     }
 
@@ -102,9 +136,10 @@ class ChatController extends Controller
             'group_name' => 'required',
             'students' => 'required|array|min:2',
             'message' => 'required',
+            'file' => 'nullable|file|max:52428800'
         ]);
 
-        //Create the group if it doesn't exist
+        //*Create the group if it doesn't exist
         $group = Group::where('name', $request->group_name)->first();
         if (!$group) {
             $group = Group::create([
@@ -112,7 +147,7 @@ class ChatController extends Controller
             ]);
         }
 
-        //* Check if a channel already exists for this group 
+        //*Check if a channel already exists for this group 
         $channel = $group->channels()->whereHas('participants', function ($query) {
             $query->where('user_id', auth('sanctum')->user()->id);
         })->first();
@@ -130,10 +165,42 @@ class ChatController extends Controller
 
         //*Create a new message in the channel
         $user = auth('sanctum')->user()->id;
-        $message = $channel->messages()->create([
+
+        //* Store the uploaded file
+        $fileUrl = null;
+        $messageType = 1; //* Initialize the message type as 1
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileUrl = $file->storeAs('uploads', $file->hashName(), 'public');
+
+            //* Update the message type based on the uploaded file's MIME type
+            $mimeType = $file->getMimeType();
+            if (str_starts_with($mimeType, 'image/')) {
+                $messageType = 2; //* Photo
+            } elseif (str_starts_with($mimeType, 'application/')) {
+                $messageType = 3; //* Document
+            }
+        }
+
+        //* Check for a link
+        if (Str::contains($request->message, 'https://') || Str::contains($request->message, 'http://')) {
+            $messageType = 4; //* Link
+        }
+
+        $messageData = [
             'user_id' => $user,
-            'content' => $request->message
-        ]);
+            'content' => $request->message,
+            'file_url' => $fileUrl //*Store the file URL in the message
+        ];
+
+        if (
+            $messageType !== null
+        ) {
+            $messageData['type'] = $messageType; //*Update the message type only if it's not null
+        }
+
+        //*Create a new message in the channel
+        $message = $channel->messages()->create($messageData);
 
         //*Push the message to the channel
         MessageSent::dispatch($message->load('channel.participants'));
@@ -145,17 +212,43 @@ class ChatController extends Controller
                 'group' => new GroupResource($group),
                 'message' => new MessageResource($message),
             ],
+            'file' => url(Storage::url($fileUrl))
         ]);
     }
+
 
     //!Create a chat for a new department or array of section or year levels
     public function createChat(Request $request)
     {
         $request->validate([
             'department_id' => 'required',
-            'message' => 'required'
+            'message' => 'nullable',
+            'file' => 'nullable|file|max:52428800'
         ]);
         $messages = [];
+
+        //* Store the uploaded file
+        $fileUrl = null;
+        $messageType = 1; //* Initialize the message type as 1
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $fileUrl = $file->storeAs('uploads', $file->hashName(), 'public');
+
+            //* Update the message type based on the uploaded file's MIME type
+            $mimeType = $file->getMimeType();
+            if (str_starts_with($mimeType, 'image/')) {
+                $messageType = 2; //* Photo
+            } elseif (str_starts_with($mimeType, 'application/')) {
+                $messageType = 3; //* Document
+            }
+        }
+
+        //* Check for a link
+        if (Str::contains($request->message, 'https://') || Str::contains($request->message, 'http://')) {
+            $messageType = 4; //* Link
+        }
+
+
 
         if ($request->section_id) {
             $sections = Section::find($request->section_id);
@@ -176,10 +269,20 @@ class ChatController extends Controller
 
                 //*Create a new message in the channel
                 $user = auth('sanctum')->user()->id;
-                $message = $channel->messages()->create([
+                $messageData = [
                     'user_id' => $user,
-                    'content' => $request->message
-                ]);
+                    'content' => $request->message,
+                    'file_url' => $fileUrl //*Store the file URL in the message
+                ];
+
+                if (
+                    $messageType !== null
+                ) {
+                    $messageData['type'] = $messageType; //*Update the message type only if it's not null
+                }
+
+                //*Create a new message in the channel
+                $message = $channel->messages()->create($messageData);
 
                 $messages[] = $message;
                 //*Push the message to the channel
@@ -207,10 +310,21 @@ class ChatController extends Controller
 
             //*Create a new message in the channel
             $user = auth('sanctum')->user()->id;
-            $message = $channel->messages()->create([
+            $messageData = [
                 'user_id' => $user,
-                'content' => $request->message
-            ]);
+                'content' => $request->message,
+                'file_url' => $fileUrl //*Store the file URL in the message
+            ];
+
+            if (
+                $messageType !== null
+            ) {
+                $messageData['type'] = $messageType; //*Update the message type only if it's not null
+            }
+
+            //*Create a new message in the channel
+            $message = $channel->messages()->create($messageData);
+
             //*Push the message to the channel
             MessageSent::dispatch($message->load('channel.participants'));
 
@@ -237,10 +351,21 @@ class ChatController extends Controller
 
             //*Create a new message in the channel
             $user = auth('sanctum')->user()->id;
-            $message = $channel->messages()->create([
+            $messageData = [
                 'user_id' => $user,
-                'content' => $request->message
-            ]);
+                'content' => $request->message,
+                'file_url' => $fileUrl //*Store the file URL in the message
+            ];
+
+            if (
+                $messageType !== null
+            ) {
+                $messageData['type'] = $messageType; //*Update the message type only if it's not null
+            }
+
+            //*Create a new message in the channel
+            $message = $channel->messages()->create($messageData);
+
             //*Push the message to the channel
             MessageSent::dispatch($message->load('channel.participants'));
 
@@ -310,8 +435,7 @@ class ChatController extends Controller
         }
 
         //*If the user and the message exist, and if the user is the owner of the message.
-        if ($user && $message && $user->id == $message->user_id
-        ) {
+        if ($user && $message && $user->id == $message->user_id) {
             //*The message is deleted and a success response is returned.
             $message->delete();
             return response()->json([

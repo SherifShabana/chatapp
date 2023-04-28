@@ -9,7 +9,7 @@ class Message extends Model
 
     protected $table = 'messages';
     public $timestamps = true;
-    protected $fillable = array('user_id','content','channel_id','seen');
+    protected $fillable = array('user_id','content','channel_id','seen','type');
     protected $casts = [
         'seen' => 'boolean',
     ];
