@@ -61,7 +61,7 @@ class ChatController extends Controller
         $request->validate([
             'student_id' => 'required',
             'message' => 'nullable',
-            'file' => 'nullable|file|max:52428800'
+            'file' => 'nullable|file|max:40960'
         ]);
 
         $student = Student::find($request->student_id);
@@ -105,7 +105,7 @@ class ChatController extends Controller
         $messageData = [
             'user_id' => $user,
             'content' => $request->message,
-            'file_url' => $fileUrl //*Store the file URL in the message
+            'file' => $fileUrl //*Store the file URL in the message
         ];
 
         if (
@@ -124,7 +124,6 @@ class ChatController extends Controller
             'status' => 'success',
             'message' => 'Message sent',
             'data' => new MessageResource($message),
-            'file' => url(Storage::url($fileUrl))
         ]);
     }
 
@@ -135,8 +134,8 @@ class ChatController extends Controller
         $request->validate([
             'group_name' => 'required',
             'students' => 'required|array|min:2',
-            'message' => 'required',
-            'file' => 'nullable|file|max:52428800'
+            'message' => 'nullable',
+            'file' => 'nullable|file|max:40960'
         ]);
 
         //*Create the group if it doesn't exist
@@ -190,7 +189,7 @@ class ChatController extends Controller
         $messageData = [
             'user_id' => $user,
             'content' => $request->message,
-            'file_url' => $fileUrl //*Store the file URL in the message
+            'file' => $fileUrl //*Store the file URL in the message
         ];
 
         if (
@@ -212,7 +211,7 @@ class ChatController extends Controller
                 'group' => new GroupResource($group),
                 'message' => new MessageResource($message),
             ],
-            'file' => url(Storage::url($fileUrl))
+
         ]);
     }
 
@@ -223,7 +222,7 @@ class ChatController extends Controller
         $request->validate([
             'department_id' => 'required',
             'message' => 'nullable',
-            'file' => 'nullable|file|max:52428800'
+            'file' => 'nullable|file|max:40960'
         ]);
         $messages = [];
 
@@ -272,7 +271,7 @@ class ChatController extends Controller
                 $messageData = [
                     'user_id' => $user,
                     'content' => $request->message,
-                    'file_url' => $fileUrl //*Store the file URL in the message
+                    'file' => $fileUrl //*Store the file URL in the message
                 ];
 
                 if (
@@ -292,7 +291,8 @@ class ChatController extends Controller
                 'status' => 'success',
                 'message' => 'Message sent successfully',
                 'data' => MessageResource::collection($messages),
-                'sections' => SectionResource::collection($sections)
+                'sections' => SectionResource::collection($sections),
+
             ]);
         } elseif ($request->level_id) {
             $yLevel = YearLevel::find($request->level_id);
@@ -313,7 +313,7 @@ class ChatController extends Controller
             $messageData = [
                 'user_id' => $user,
                 'content' => $request->message,
-                'file_url' => $fileUrl //*Store the file URL in the message
+                'file' => $fileUrl //*Store the file URL in the message
             ];
 
             if (
@@ -332,7 +332,8 @@ class ChatController extends Controller
                 'status' => 'success',
                 'message' => 'Message sent successfully',
                 'data' => new MessageResource($message),
-                'year_level' => new YearLevelResource($yLevel)
+                'year_level' => new YearLevelResource($yLevel),
+
             ]);
         } else {
             $dept = Department::find($request->department_id);
@@ -354,7 +355,7 @@ class ChatController extends Controller
             $messageData = [
                 'user_id' => $user,
                 'content' => $request->message,
-                'file_url' => $fileUrl //*Store the file URL in the message
+                'file' => $fileUrl //*Store the file URL in the message
             ];
 
             if (
@@ -373,7 +374,7 @@ class ChatController extends Controller
                 'status' => 'success',
                 'message' => 'Message sent successfully',
                 'data' => new MessageResource($message),
-                'department' => new DepartmentResource($dept)
+                'department' => new DepartmentResource($dept),
             ]);
         }
     }
