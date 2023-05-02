@@ -14,7 +14,7 @@ class AdminController extends Controller
     public function adminChats(Request $request)
     {
         $request->validate([
-            'key' => ['nullable', 'string', 'min:3']
+            'key' => ['nullable', 'string', 'min:2']
         ]);
 
         $user = $request->user();
