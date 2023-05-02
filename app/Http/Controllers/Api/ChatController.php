@@ -14,7 +14,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\MessageResource;
 use App\Http\Resources\SectionResource;
-use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\YearLevelResource;
 use App\Http\Resources\DepartmentResource;
 use Illuminate\Support\Str;
@@ -55,7 +54,6 @@ class ChatController extends Controller
 
 
     //!Single Student Chat
-
     public function singleStudent(Request $request)
     {
         $request->validate([
@@ -79,7 +77,14 @@ class ChatController extends Controller
             $channel->participants()->attach(auth('sanctum')->user()->id);
         }
 
-        $user = auth('sanctum')->user()->id;
+        //*If the request is empty return this response
+        if (!$request->hasFile('file') && !$request->message) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Message is required',
+            ]);
+        }
+
 
         //*Store the uploaded file
         $fileUrl = null;
@@ -102,6 +107,7 @@ class ChatController extends Controller
             $messageType = 4; //*Link
         }
 
+        $user = auth('sanctum')->user()->id;
         $messageData = [
             'user_id' => $user,
             'content' => $request->message,
@@ -120,6 +126,9 @@ class ChatController extends Controller
         //*Push the message to the channel
         MessageSent::dispatch($message->load('channel.participants'));
 
+
+
+        //*Return successful response
         return response()->json([
             'status' => 'success',
             'message' => 'Message sent',
@@ -162,8 +171,14 @@ class ChatController extends Controller
         //*Add students to the group
         $group->students()->attach($request->students);
 
-        //*Create a new message in the channel
-        $user = auth('sanctum')->user()->id;
+        //*If the request is empty return this response
+        if (!$request->hasFile('file') && !$request->message) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Message is required',
+            ]);
+        }
+
 
         //* Store the uploaded file
         $fileUrl = null;
@@ -186,6 +201,7 @@ class ChatController extends Controller
             $messageType = 4; //* Link
         }
 
+        $user = auth('sanctum')->user()->id;
         $messageData = [
             'user_id' => $user,
             'content' => $request->message,
@@ -204,6 +220,8 @@ class ChatController extends Controller
         //*Push the message to the channel
         MessageSent::dispatch($message->load('channel.participants'));
 
+
+        //*Return successful response
         return response()->json([
             'status' => 'success',
             'message' => 'Group chat created successfully',
@@ -211,7 +229,6 @@ class ChatController extends Controller
                 'group' => new GroupResource($group),
                 'message' => new MessageResource($message),
             ],
-
         ]);
     }
 
@@ -225,6 +242,8 @@ class ChatController extends Controller
             'file' => 'nullable|file|max:40960'
         ]);
         $messages = [];
+
+
 
         //* Store the uploaded file
         $fileUrl = null;
@@ -248,10 +267,8 @@ class ChatController extends Controller
         }
 
 
-
         if ($request->section_id) {
             $sections = Section::find($request->section_id);
-
             //* If there is an array of sections
             foreach ($sections as $section) {
                 //*Check if a channel already exists for this section 
@@ -266,7 +283,14 @@ class ChatController extends Controller
                     $channel->participants()->attach(auth('sanctum')->user()->id);
                 }
 
-                //*Create a new message in the channel
+                //*If the request is empty return this response
+                if (!$request->hasFile('file') && !$request->message) {
+                    return response()->json([
+                        'status' => 'error',
+                        'message' => 'Message is required',
+                    ]);
+                }
+
                 $user = auth('sanctum')->user()->id;
                 $messageData = [
                     'user_id' => $user,
@@ -287,6 +311,7 @@ class ChatController extends Controller
                 //*Push the message to the channel
                 MessageSent::dispatch($message->load('channel.participants'));
             }
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Message sent successfully',
@@ -308,7 +333,14 @@ class ChatController extends Controller
                 $channel->participants()->attach(auth('sanctum')->user()->id);
             }
 
-            //*Create a new message in the channel
+            //*If the request is empty return this response
+            if (!$request->hasFile('file') && !$request->message) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Message is required',
+                ]);
+            }
+
             $user = auth('sanctum')->user()->id;
             $messageData = [
                 'user_id' => $user,
@@ -350,7 +382,14 @@ class ChatController extends Controller
                 $channel->participants()->attach(auth('sanctum')->user()->id);
             }
 
-            //*Create a new message in the channel
+            //*If the request is empty return this response
+            if (!$request->hasFile('file') && !$request->message) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Message is required',
+                ]);
+            }
+
             $user = auth('sanctum')->user()->id;
             $messageData = [
                 'user_id' => $user,
@@ -369,6 +408,7 @@ class ChatController extends Controller
 
             //*Push the message to the channel
             MessageSent::dispatch($message->load('channel.participants'));
+
 
             return response()->json([
                 'status' => 'success',
@@ -442,6 +482,15 @@ class ChatController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'message deleted'
+            ]);
+        }
+
+        //*If the user and the message exist, and if the user isn't the owner of the message.
+        if ($user && $message && $user->id !== $message->user_id) {
+            //*The message isn't deleted and a error response is returned.
+            return response()->json([
+                'status' => 'error',
+                'message' => 'message not found or user not authorized'
             ]);
         }
     }

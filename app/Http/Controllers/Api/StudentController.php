@@ -19,6 +19,9 @@ class studentController extends Controller
     //!Get all Student Chats
     public function chatList(Request $request)
     {
+        $request->validate([
+            'key' => 'nullable|string|min:2',
+        ]);
 
         $student = $request->user();
 
@@ -60,7 +63,20 @@ class studentController extends Controller
                         break;
                 }
             }
-        )->get();
+        );
+
+        //*Filter the chats
+        if ($request->key) {
+            $channels = $channels->where('name', 'like', '%'.$request->key.'%')
+            
+            ->orWhereHas('messages', function ($query) use ($request) {
+                $query->whereHas('user', function ($query) use ($request) {
+                    $query->where('name', 'like', '%'.$request->key.'%');
+                });
+            });
+        }
+
+        $channels = $channels->get();
 
         return response()->json([
             'status' => 'success',
@@ -72,6 +88,10 @@ class studentController extends Controller
     //!Retrieves the messages for the given channel and updates their "seen" field to true.
     public function channelMessages(Request $request)
     {
+        $request->validate([
+            'key' => 'nullable|string|min:2',
+        ]);
+
         //*Find the channel with the given ID
         $channel = Channel::find($request->channel_id);
 
@@ -86,8 +106,16 @@ class studentController extends Controller
         //*Update the "seen" field of the unseen messages in the channel to true
         $channel->unseenmessages()->update(['seen' => true]);
 
+        //*Prepare it for a query
+        $messages = $channel->messages();
+
+        //*Filter the messages
+        if ($request->key) {
+            $messages = $messages->where('content', 'like', '%' . $request->key . '%');
+        }
+
         //*Retrieve all the messages for the channel
-        $messages = $channel->messages()->get();
+        $messages = $messages->get();
 
         return response()->json([
             'status' => 'success',
