@@ -6,6 +6,8 @@ use App\Models\Channel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AdminChatMessageResource;
+use App\Http\Resources\ArchiveResource;
+use App\Models\Archive;
 use Illuminate\Database\Eloquent\Builder;
 
 class AdminController extends Controller
@@ -29,6 +31,15 @@ class AdminController extends Controller
         return response()->json([
             'status' => 'success',
             'chats' => AdminChatMessageResource::collection($channels)
+        ]);
+    }
+
+    public function archiveMessages(Request $request)
+    {
+        $archive = Archive::all();
+        return response()->json([
+            'status' => 'success',
+            'messages' => ArchiveResource::collection($archive)
         ]);
     }
 }

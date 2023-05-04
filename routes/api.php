@@ -30,7 +30,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('create-group', [ChatController::class, 'groupChat']); //*Create group chat
     Route::post('create-chat', [ChatController::class, 'createChat']); //*Create a new chat
 
+    //*Get chats
     Route::get('admin-chats', [AdminController::class, 'adminChats']); //*Get all chats with this specific admin
+
+    //*Get archived messages
+    Route::get('archive-messages', [AdminController::class, 'archiveMessages']); //*Get all archived messages
 });
 
 

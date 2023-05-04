@@ -9,7 +9,6 @@ use App\Models\Section;
 use App\Models\Student;
 use App\Models\YearLevel;
 use App\Models\Department;
-use Database\Factories\YearLevelFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -70,6 +69,9 @@ class DatabaseSeeder extends Seeder
             'section_id' => 34,
         ]);
 
+        Student::factory(100)->create([
+            'password' => bcrypt('1234'),
+        ]);
 
         //*Sections
         Section::factory(12)->create([
