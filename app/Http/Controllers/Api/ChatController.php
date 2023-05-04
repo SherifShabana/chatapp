@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Group;
+use App\Models\Archive;
 use App\Models\Message;
 use App\Models\Section;
 use App\Models\Student;
 use App\Models\YearLevel;
 use App\Models\Department;
 use App\Events\MessageSent;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\GroupResource;
@@ -16,7 +18,6 @@ use App\Http\Resources\MessageResource;
 use App\Http\Resources\SectionResource;
 use App\Http\Resources\YearLevelResource;
 use App\Http\Resources\DepartmentResource;
-use Illuminate\Support\Str;
 
 class ChatController extends Controller
 {
@@ -82,6 +83,14 @@ class ChatController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Message is required',
+            ]);
+        }
+
+        //*If the size is bigger than limit return this response
+        if ($request->hasFile('file') && $request->file('file')->getSize() > 39 * 1024 * 1024) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'File size is bigger than limit',
             ]);
         }
 
@@ -179,6 +188,14 @@ class ChatController extends Controller
             ]);
         }
 
+        //*If the size is bigger than limit return this response
+        if ($request->hasFile('file') && $request->file('file')->getSize() > 39 * 1024 * 1024) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'File size is bigger than limit',
+            ]);
+        }
+
 
         //* Store the uploaded file
         $fileUrl = null;
@@ -244,6 +261,13 @@ class ChatController extends Controller
         $messages = [];
 
 
+        //*If the size is bigger than limit return this response
+        if ($request->hasFile('file') && $request->file('file')->getSize() > 39 * 1024 * 1024) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'File size is bigger than limit',
+            ]);
+        }
 
         //* Store the uploaded file
         $fileUrl = null;
@@ -477,6 +501,18 @@ class ChatController extends Controller
 
         //*If the user and the message exist, and if the user is the owner of the message.
         if ($user && $message && $user->id == $message->user_id) {
+
+            //*Store the message in the Archive table then delete the message
+            $archiveData = [
+                'message_id' => $message->id,
+                'content' => $message->content,
+                'user_id' => $message->user_id,
+                'type' => $message->type,
+                'file' => $message->file,
+                'deleted_at' => now()
+            ];
+            Archive::create($archiveData);
+
             //*The message is deleted and a success response is returned.
             $message->delete();
             return response()->json([
