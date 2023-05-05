@@ -76,7 +76,9 @@ class studentController extends Controller
             });
         }
 
-        $channels = $channels->get();
+        $channels = $channels->selectRaw("channels.*, (SELECT MAX(created_at) from messages WHERE messages.channel_id=channels.id) as latest_message_on")
+        ->orderBy("latest_message_on", "DESC")
+        ->get();
 
         return response()->json([
             'status' => 'success',
