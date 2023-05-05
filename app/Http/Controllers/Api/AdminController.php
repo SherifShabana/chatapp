@@ -21,11 +21,16 @@ class AdminController extends Controller
 
         $user = $request->user();
 
+
         $channels = Channel::when($request->key, function ($query) use ($request) {
             $query->where('name', 'like', "%$request->key%");
-        })->with(['lastmessage'])->whereHas('participants', function (Builder $query) use ($user) {
+        })->with(['lastmessage'])
+        ->whereHas('participants', function (Builder $query) use ($user) {
             $query->where('users.id', $user->id);
-        })->get();
+        })->selectRaw("channels.*, (SELECT MAX(created_at) from messages WHERE messages.channel_id=channels.id) as latest_message_on")
+        ->orderBy("latest_message_on", "DESC")
+        ->get();
+        
 
 
         return response()->json([
