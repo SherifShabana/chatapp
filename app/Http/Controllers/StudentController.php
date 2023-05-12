@@ -33,9 +33,9 @@ class StudentController extends Controller
 
         $departments = Department::pluck('name','id')->toArray();
        // should be removed later
-
-       $Section = [];
-        return view('student.create',compact('model','departments','yearLevels','section'));
+       $yearLevels = [];
+       $sections = [];
+        return view('student.create',compact('model','departments','yearLevels','sections'));
     }
 
 
@@ -53,6 +53,7 @@ class StudentController extends Controller
        ];
 
        $this ->validate($request,$rules);
+       $request ->merge(['password'=>bcrypt($request->username)]);
        //$record = new student;
        //$record ->name = $request->input('name');
        //$record->save();
@@ -83,10 +84,11 @@ class StudentController extends Controller
     {
         $model = Student::findOrFail($id);
         $departments = Department::pluck('name','id')->toArray();
-       // should be removed later
+        $yearLevels = YearLevel::where('department_id',$model->section->yearLevel->department_id)
+        ->pluck('name','id')->toArray();
 
-       $Section = Student::where('department_id',$model->section->yearLevel->department_id)->pluck('name','id')->toArray();
-        return view('student.edit',compact('model','departments','yearLevels','section'));
+       $sections = Section::where('year_level_id',$model->section->year_level_id)->pluck('name','id')->toArray();
+        return view('student.edit',compact('model','departments','yearLevels','sections'));
 
     }
 

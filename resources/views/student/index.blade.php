@@ -49,8 +49,8 @@ Student
                       <tr>
                         <td>{{$loop->iteration}}</td>
                         <td>{{$record->name}}</td>
-                        <td>{{$record->yearLevel->name ?? ""}}</td>
-                        <td>{{$record->yearLevel->department->name ?? ""}}</td>
+                        <td>{{$record->section->name ?? ""}}</td>
+                        <td>{{$record->section->yearLevel->name ?? ""}}</td>
                         <td>{{$record->section->yearLevel->department->name ?? ""}}</td>
 
                         <td class="text-center">
