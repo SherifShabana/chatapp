@@ -31,8 +31,11 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::group(['middleware' => 'auth'], function(){
+    Route::resource('student',StudentController::class);
+});
 Route::get('/home',[HomeController::class,'index'])->name('home');
 Route::resource('department',DepartmentController::class);
 Route::resource('year-level',YearLevelController::class);
 Route::resource('section',SectionController::class);
-Route::resource('student',StudentController::class);
+
