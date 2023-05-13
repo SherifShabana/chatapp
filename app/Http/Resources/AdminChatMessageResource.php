@@ -17,7 +17,7 @@ class AdminChatMessageResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'created_at' => $this->created_at->format("h:i a") ?? "", //7:30 am
+            'created_at' => $this->created_at->format("h:i a m/d/Y") ?? "", //7:30 am
             'last_message' => new ChatMessageResource($this->lastmessage) ?? null,
         ];
     }
