@@ -23,7 +23,7 @@ class StudentController extends Controller
     {
         $records = Student::when($request->keyword, function ($query) use ($request) {
             $query->where('name', 'like', "%{$request->keyword}%");
-        })->paginate(20);
+        })->paginate(30);
         return view('student.index', compact('records'));                     //  take a look
     }
 

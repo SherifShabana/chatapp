@@ -16,7 +16,7 @@ class YearLevelController extends Controller
      */
     public function index()
     {
-        $records = YearLevel::paginate(20);
+        $records = YearLevel::paginate(50);
         return view('year_levels.index',compact('records'));                     //  take a look
     }
 
