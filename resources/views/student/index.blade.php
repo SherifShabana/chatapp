@@ -105,13 +105,14 @@ Student
                       </tr>
                     @endforeach
                     </tbody>
-
-
                 </table>
              </div>
+                 <div class="text-center">
+                        {!! $records->links("pagination::bootstrap-4") !!}
+                 </div>
            @else
               <div class="alert alert-danger" role="alert">
-                   no data excest
+                   no data found
               </div>
 
            @endif
