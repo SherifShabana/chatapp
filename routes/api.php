@@ -35,6 +35,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //*Get archived messages
     Route::get('archive-messages', [AdminController::class, 'archiveMessages']); //*Get all archived messages
+
+    //*Delete message
+    Route::post('delete-message', [ChatController::class, 'deleteMsg']); //*Delete a message
 });
 
 
@@ -47,8 +50,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('star-message', [ChatController::class, 'starMessage']); //*Star a message
     Route::get('starred-messages', [ChatController::class, 'starredMessages']); //*Get all starred messages
 
-    //*Delete message
-    Route::post('delete-message', [ChatController::class, 'deleteMsg']); //*Delete a message
 });
 
 
@@ -69,3 +70,4 @@ Route::post('student-search', [ChatController::class, 'getStudents']); //*Search
 Route::get('departments', [MainController::class, 'departments']); //*Get all departments
 Route::get('year-levels', [MainController::class, 'yearLevels']); //*Get all year levels
 Route::get('sections', [MainController::class, 'sections']);//*Get all sections
+Route::get('staff', [MainController::class, 'staff']); //*Get all staff

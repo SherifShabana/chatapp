@@ -21,7 +21,7 @@ class ChatMessageResource extends JsonResource
             'user_id' => $this->user->id ?? "",
             'user_name' => $this->user->name ?? "",
             'created_at' => $this->created_at->format("H:i a") ?? "",//7:30 am
-            'file' => $this->file != null ? url(Storage::url($this->file ?? "")) : "",
+            /* 'file' => $this->file != null ? url(Storage::url($this->file ?? "")) : "", */
             /* 'channel' => $this->whenLoaded('channel', new ChannelResource($this->channel)),
             'user' => $this->whenLoaded('user', new UserResource($this->user)), */
         ];
