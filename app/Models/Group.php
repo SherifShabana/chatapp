@@ -21,4 +21,9 @@ class Group extends Model
         return $this->morphMany(Channel::class, 'chattable');
     }
 
+    public function staff()
+    {
+        return $this->belongsToMany(User::class);
+    }
+
 }

@@ -4,15 +4,15 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGroupStudentTable extends Migration {
+class CreateGroupUserTable extends Migration {
 
 	public function up()
 	{
-		Schema::create('group_student', function(Blueprint $table) {
+		Schema::create('group_user', function(Blueprint $table) {
 			$table->increments('id');
 			$table->timestamps();
 			$table->integer('group_id');
-			$table->integer('student_id');
+			$table->integer('user_id');
 		});
 	}
 

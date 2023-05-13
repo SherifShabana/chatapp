@@ -35,6 +35,18 @@ class DatabaseSeeder extends Seeder
             'role' => 1, //admin
         ]);
 
+        User::factory()->create([
+            'name' => 'Eng.Fahmy Moustafa',
+            'email' => 'tester3@email.com',
+            'password' => bcrypt('123123'),
+            'role' => 1, //admin
+        ]);
+
+        User::factory(10)->create([
+            'password' => bcrypt('123123'),
+            'role' => 1, //admin
+        ]);
+
 
 
         //*Students
@@ -71,7 +83,7 @@ class DatabaseSeeder extends Seeder
 
         Student::factory(100)->create([
             'password' => bcrypt('1234'),
-        ]);
+        ]); 
 
         //*Sections
         Section::factory(12)->create([
@@ -97,12 +109,12 @@ class DatabaseSeeder extends Seeder
         ]);
         Section::factory(12)->create([
             'name' => 'Section 8',
-        ]);
+        ]); 
 
 
 
 
-        //*Year Level
+         //*Year Level
         YearLevel::factory(3)->create([
             'name' => 'Year Level 1',
         ]);
@@ -125,6 +137,6 @@ class DatabaseSeeder extends Seeder
         ]);
         Department::create([
             'name' => 'Accounting',
-        ]);
+        ]); 
     }
 }

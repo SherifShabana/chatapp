@@ -24,8 +24,8 @@ class MessageResource extends JsonResource
             'user_name' => $this->user->name ?? "",
             'channel_id' => $this->channel->id ?? "",
             'channel_name' => $this->channel->name ?? "",
-            'created_at' => $this->created_at->format("H:i a") ?? "", //7:30 am
-            'file' => $this->file != null ? url(Storage::url($this->file ?? "")) : "",
+            'created_at' => $this->created_at->format("h:i a m/d/Y") ?? "", //7:30 am
+            /* 'file' => $this->file != null ? url(Storage::url($this->file ?? "")) : "", */
 
             /* 'channel' => $this->whenLoaded('channel', new ChannelResource($this->channel)),
             'user' => $this->whenLoaded('user', new UserResource($this->user)), */
