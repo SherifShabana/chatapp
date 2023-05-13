@@ -54,7 +54,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Abdelrahman Ebrahim',
             'username' => 'abdelrahman',
             'password' => bcrypt('abdelrahman'),
-            'section_id' => 34, 
+            'section_id' => 34,
         ]);
         Student::create([
             'name' => 'Rana Elsayed',
