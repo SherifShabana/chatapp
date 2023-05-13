@@ -15,11 +15,12 @@ class StudentImport implements ToCollection, WithHeadingRow
         foreach ($rows as $row)
         {
             //dd($row);
-            $section = Section::where('name',$row['section'])->whereHas('yearLevel', function($query) use($row){
-                $query->where('name', $row['year_level']);
-                $query->whereHas('department',function($query) use($row){
-                    $query->where('name', $row['department']);
-                });
+            $section = Section::where('name', trim( $row['section']))
+                ->whereHas('yearLevel', function($query) use($row){
+                    $query->where('name', trim($row['year_level']));
+                    $query->whereHas('department',function($query) use($row){
+                        $query->where('name', trim($row['department']));
+                    });
             })->first();
 
             if($section){
