@@ -8,6 +8,9 @@ use App\Models\Section;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use App\Imports\StudentImport;
+use Excel;
+use Maatwebsite\Excel\Fakes\ExcelFake;
 
 class StudentController extends Controller
 {
@@ -120,5 +123,11 @@ class StudentController extends Controller
         flash()->success('deleted');
         return back();
 
+    }
+
+    public function import(Request $request)
+    {
+        Excel::import(new StudentImport, request()->file('students_file'));
+        return back();
     }
 }
