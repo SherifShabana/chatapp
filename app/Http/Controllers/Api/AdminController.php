@@ -82,7 +82,7 @@ class AdminController extends Controller
             $channel->participants()->attach(auth('sanctum')->user()->id);
         }
 
-        //*Add students to the group
+        //*Add staff to the group
         $group->staff()->attach($request->staff);
 
         //*If the request is empty return this response
