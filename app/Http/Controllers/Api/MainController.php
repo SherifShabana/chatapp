@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Events\MessageSent;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\DepartmentResource;
-use App\Http\Resources\MessageResource;
-use App\Http\Resources\SectionResource;
-use App\Http\Resources\UserResource;
-use App\Http\Resources\YearLevelResource;
-use App\Models\Department;
+use App\Models\User;
+use App\Models\Channel;
 use App\Models\Section;
 use App\Models\Student;
-use App\Models\User;
 use App\Models\YearLevel;
+use App\Models\Department;
+use App\Events\MessageSent;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\ChannelResource;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\MessageResource;
+use App\Http\Resources\SectionResource;
+use App\Http\Resources\YearLevelResource;
+use App\Http\Resources\DepartmentResource;
 
 class MainController extends Controller
 {
@@ -73,35 +75,35 @@ class MainController extends Controller
     //!Send a message
     public function sendMessage(Request $request)
     {
-        $user = 1;
-        $messages = [];
-        // students [1,2,3]
-        $students = Student::whereIn('id', $request->students)->get();
-        foreach ($students as $student) {
-            $channel = $student->channels()->whereHas('participants', function ($query) use ($user) {
-                $query->where('user_id', $user);
-            })->first();
-            if (!$channel) {
-                $channel = $student->channels()->create([
-                    'name' => $student->name,
-                ]);
-                $channel->participants()->attach($user); //TODO Check up on attach()
-            }
+        $request->validate([
+            'channel_id' => 'required',
+            'message' => 'required',
+        ]);
 
-            // have channel
-            $message = $channel->messages()->create([
-                'user_id' => $user,
-                'content' => $request->input('content'),
+        $user = auth('sanctum')->user()->id;
+
+        $channel = Channel::find($request->channel_id);
+        if (!$channel) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Channel not found',
             ]);
-            $messages[] = $message;
-
-            MessageSent::dispatch($message->load('channel.participants', 'user'));
         }
-        // return response with success message
+
+        $message = $channel->messages()->create([
+            'user_id' => $user,
+            'content' => $request->message,
+        ]);
+
+        MessageSent::dispatch($message->load('channel.participants'));
+
         return response()->json([
             'status' => 'success',
             'message' => 'Message sent successfully',
-            'data' => MessageResource::collection($messages)
+            'data' => [
+                'message' => new MessageResource($message),
+                'channel' => new ChannelResource($channel),
+            ],
         ]);
     }
 }
