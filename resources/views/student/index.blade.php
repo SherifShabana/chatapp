@@ -30,6 +30,40 @@ Student
 
         <div class="card-body">
             <a href="{{route('student.create')}}" class="btn btn-primary mb-2">new Student</a>
+            <!-- Button trigger modal -->
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-success mb-2" data-toggle="modal" data-target="#exampleModal">
+    Import Students
+  </button>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Import Students</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {!! Form::open([
+            'route' => 'student.import',
+            'method' => 'post',
+            'files' => true
+        ]) !!}
+        <div class="modal-body">
+
+            <input type="file" name="students_file">
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Import</button>
+        </div>
+        {!! Form::close() !!}
+      </div>
+    </div>
+  </div>
              @if (count($records))
              <div class="table-responsive">
                 <table class="table table-bordered">
@@ -71,13 +105,14 @@ Student
                       </tr>
                     @endforeach
                     </tbody>
-
-
                 </table>
              </div>
+                 <div class="text-center">
+                        {!! $records->links("pagination::bootstrap-4") !!}
+                 </div>
            @else
               <div class="alert alert-danger" role="alert">
-                   no data excest
+                   no data found
               </div>
 
            @endif

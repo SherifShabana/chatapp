@@ -31,13 +31,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('create-chat', [ChatController::class, 'createChat']); //*Create a new chat
 
     //*Create Staff Chat
-    Route::post('create-staff',[AdminController::class, 'staffChat']);
+    Route::post('create-staff', [AdminController::class, 'staffChat']);
 
     //*Get chats
     Route::get('admin-chats', [AdminController::class, 'adminChats']); //*Get all chats with this specific admin
 
     //*Get archived messages
     Route::get('archive-messages', [AdminController::class, 'archiveMessages']); //*Get all archived messages
+
+    //*Send Message
+    Route::post('send-message', [MainController::class, 'sendMessage']); //*Currently a demo
 
     //*Delete message
     Route::post('delete-message', [ChatController::class, 'deleteMsg']); //*Delete a message
@@ -56,8 +59,7 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 
-//*Send Message
-Route::post('send-message', [MainController::class, 'sendMessage']); //*Currently a demo
+
 
 
 //*Logins
@@ -72,5 +74,5 @@ Route::post('student-search', [ChatController::class, 'getStudents']); //*Search
 //*Get a list of the following
 Route::get('departments', [MainController::class, 'departments']); //*Get all departments
 Route::get('year-levels', [MainController::class, 'yearLevels']); //*Get all year levels
-Route::get('sections', [MainController::class, 'sections']);//*Get all sections
+Route::get('sections', [MainController::class, 'sections']); //*Get all sections
 Route::get('staff', [MainController::class, 'staff']); //*Get all staff
