@@ -67,20 +67,16 @@ class ChatController extends Controller
 
         $student = Student::find($request->student_id);
 
-        $adminName = auth('sanctum')->user()->name;
+        
 
-        $title = 'New Message from ' . $adminName;
-
-        $body = $request->message;
-
-        $token = [$student->token];
+        /* $tokens = [$student->tokens];
 
         $data = [
             'sender' => $adminName,
             'receiver' => $student->name,
         ];
 
-        //$notification = $this->notifyByFirebase($title, $body, $token, $data);
+        $notification = $this->notifyByFirebase($title, $body, $token, $data); */
 
 
         //*Check if a channel already exists for this student
@@ -150,17 +146,23 @@ class ChatController extends Controller
         //*Create a new message in the channel
         $message = $channel->messages()->create($messageData);
 
+
+        //!The data needed for the notification
+        $adminName = auth('sanctum')->user()->name;
+
+        $title = 'New Message from ' . $adminName;
+
+        $body = $request->message;
+
         //*Push the message to the channel
-        MessageSent::dispatch($message->load('channel.participants'));
+        MessageSent::dispatch($message->load('channel.participants'),$title, $body);
 
 
         //*Return successful response
-
         return response()->json([
             'status' => 'success',
             'message' => 'Message sent',
             'data' => new MessageResource($message),
-            $notification
         ]);
     }
 
@@ -254,23 +256,18 @@ class ChatController extends Controller
         //*Create a new message in the channel
         $message = $channel->messages()->create($messageData);
 
-        //*Push the message to the channel
-        MessageSent::dispatch($message->load('channel.participants'));
 
-
+        //!The data needed for the notification
         $adminName = auth('sanctum')->user()->name;
 
         $title = 'New Message from ' . $adminName;
 
         $body = $request->message;
 
-        $token = $group->students()->pluck('token')->toArray();
+        /* $token = $group->students()->pluck('token')->toArray(); */
 
-        $data = [
-            'sender' => $adminName,
-        ];
-
-        $notification = $this->notifyByFirebase($title, $body, $token, $data);
+        //*Push the message to the channel
+        MessageSent::dispatch($message->load('channel.participants'),$title, $body);
 
         //*Return successful response
         return response()->json([
@@ -280,7 +277,7 @@ class ChatController extends Controller
                 'group' => new GroupResource($group),
                 'message' => new MessageResource($message),
             ],
-            $notification
+            
         ]);
     }
 
@@ -295,6 +292,13 @@ class ChatController extends Controller
         ]);
         $messages = [];
 
+
+        //!The data needed for the notification
+        $adminName = auth('sanctum')->user()->name;
+
+        $title = 'New Message from ' . $adminName;
+
+        $body = $request->message;
 
         //*If the size is bigger than limit return this response
         /* if ($request->hasFile('file') && $request->file('file')->getSize() > 39 * 1024 * 1024) {
@@ -328,21 +332,7 @@ class ChatController extends Controller
 
         if ($request->section_id) {
             $sections = Section::find($request->section_id);
-            $students = $sections->students()->get();
-
-            $adminName = auth('sanctum')->user()->name;
-
-            $title = 'New Message from ' . $adminName;
-
-            $body = $request->message;
-
-            $token = $students->pluck('token')->toArray();
-
-            $data = [
-                'sender' => $adminName,
-            ];
-
-            $notification = $this->notifyByFirebase($title, $body, $token, $data);
+            
 
             //* If there is an array of sections
             foreach ($sections as $section) {
@@ -383,18 +373,17 @@ class ChatController extends Controller
                 $message = $channel->messages()->create($messageData);
 
                 $messages[] = $message;
+
+
                 //*Push the message to the channel
-                MessageSent::dispatch($message->load('channel.participants'));
+                MessageSent::dispatch($message->load('channel.participants'), $title, $body);
             }
-
-
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'Message sent successfully',
                 'data' => MessageResource::collection($messages),
                 'sections' => SectionResource::collection($sections),
-                $notification
             ]);
         } elseif ($request->level_id) {
             $yLevel = YearLevel::find($request->level_id);
@@ -435,7 +424,7 @@ class ChatController extends Controller
             $message = $channel->messages()->create($messageData);
 
             //*Push the message to the channel
-            MessageSent::dispatch($message->load('channel.participants'));
+            MessageSent::dispatch($message->load('channel.participants'), $title, $body);
 
             return response()->json([
                 'status' => 'success',
@@ -484,7 +473,7 @@ class ChatController extends Controller
             $message = $channel->messages()->create($messageData);
 
             //*Push the message to the channel
-            MessageSent::dispatch($message->load('channel.participants'));
+            MessageSent::dispatch($message->load('channel.participants'), $title, $body);
 
 
             return response()->json([

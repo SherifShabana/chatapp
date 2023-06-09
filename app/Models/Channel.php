@@ -33,7 +33,7 @@ class Channel extends Model
 
     public function participants()
     {
-        return $this->belongsToMany(User::class,'participants');
+        return $this->belongsToMany(User::class, 'participants');
     }
 
     public function getStudents()
@@ -41,15 +41,16 @@ class Channel extends Model
         $tokens = [];
         $students = [];
         if ($this->chattable_type == 'App\Models\Student') {
-            $students = collect($this->chattable);//student
-        }elseif ($this->chattable_type == 'App\Models\Department') {
+            $students = collect([$this->chattable]); //student
+        } elseif ($this->chattable_type == 'App\Models\Department') {
             $students = Student::ofDepartment($this->chattable_id)->get();
-        }elseif ($this->chattable_type == 'App\Models\YearLevel'
+        } elseif (
+            $this->chattable_type == 'App\Models\YearLevel'
             || $this->chattable_type == 'App\Models\Section'
             || $this->chattable_type == 'App\Models\Group'
         ) {
             $students = $this->chattable->students;
         }
+        return $students;
     }
-
 }

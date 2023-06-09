@@ -40,7 +40,7 @@ class AuthController extends Controller
         $token = $student->createToken('student');
         $plainTextToken = $token->plainTextToken;
         $fcmToken = $request->fcm_token;
-        $token->accessToken->fcm_token= $fcmToken;
+        $token->accessToken->fcm_token = $fcmToken;
         $token->accessToken->save();
         $student->save();
         $response = [

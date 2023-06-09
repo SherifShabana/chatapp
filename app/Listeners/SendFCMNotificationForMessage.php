@@ -30,6 +30,7 @@ class SendFCMNotificationForMessage
         $tokens = [];
         $channel = $event->message->channel;
         $students = $channel->getStudents();
+        
 
         foreach ($students as $student){
             foreach ($student->tokens as $token){
@@ -37,8 +38,9 @@ class SendFCMNotificationForMessage
             }
         }
 
-        $this->notifyByFirebase("title","body",$tokens,[
-            'message_id' => $event->message_id
+        $this->notifyByFirebase($event->title,$event->body,$tokens,[
+            'message_id' => $event->message->id,
+            'sender' => $event->title
         ]);
     }
 }
