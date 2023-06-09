@@ -36,14 +36,19 @@ class AuthController extends Controller
                 'data' => null
             ]);
         }
-        $student->tokens()->delete();
-        $token = $student->createToken('student')->plainTextToken;
+        //$student->tokens()->delete();
+        $token = $student->createToken('student');
+        $plainTextToken = $token->plainTextToken;
+        $fcmToken = $request->fcm_token;
+        $token->accessToken->fcm_token = $fcmToken;
+        $token->accessToken->save();
+        $student->save();
         $response = [
             'status' => 'success',
             'message' => 'Login successfully',
             'data' => [
                 'user' => new StudentResource($student),
-                'access_token' => $token
+                'access_token' => $plainTextToken
             ]
         ];
         return response()->json($response);
