@@ -38,4 +38,13 @@ class Student extends Authenticatable
         return $this->belongsToMany(Message::class);
     }
 
+    public function scopeOfDepartment($query, $departmentId)
+    {
+        return $query->whereHas('section', function ($q) use($departmentId){
+            $q->whereHas('yearLevel', function ($q) use($departmentId){
+                $q->where('department_id', $departmentId);
+            });
+        });
+    }
+
 }

@@ -80,10 +80,10 @@ class ChatController extends Controller
             'receiver' => $student->name,
         ];
 
-        $notification = $this->notifyByFirebase($title, $body, $token, $data);
+        //$notification = $this->notifyByFirebase($title, $body, $token, $data);
 
 
-        //*Check if a channel already exists for this student 
+        //*Check if a channel already exists for this student
         $channel = $student->channels()->whereHas('participants', function ($query) {
             $query->where('user_id', auth('sanctum')->user()->id);
         })->first();
@@ -184,7 +184,7 @@ class ChatController extends Controller
             ]);
         }
 
-        //*Check if a channel already exists for this group 
+        //*Check if a channel already exists for this group
         $channel = $group->channels()->whereHas('participants', function ($query) {
             $query->where('user_id', auth('sanctum')->user()->id);
         })->first();
@@ -346,7 +346,7 @@ class ChatController extends Controller
 
             //* If there is an array of sections
             foreach ($sections as $section) {
-                //*Check if a channel already exists for this section 
+                //*Check if a channel already exists for this section
                 $channel = $section->channels()->whereHas('participants', function ($query) {
                     $query->where('user_id', auth('sanctum')->user()->id);
                 })->first();
@@ -447,7 +447,7 @@ class ChatController extends Controller
         } else {
             $dept = Department::find($request->department_id);
 
-            //*Check if a channel already exists for this department 
+            //*Check if a channel already exists for this department
             $channel = $dept->channels()->whereHas('participants', function ($query) {
                 $query->where('user_id', auth('sanctum')->user()->id);
             })->first();

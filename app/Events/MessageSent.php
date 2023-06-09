@@ -16,7 +16,7 @@ class MessageSent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets,InteractsWithBroadcasting, SerializesModels;
 
-    private $message;
+    public $message;
     /**
      * Create a new event instance.
      *
