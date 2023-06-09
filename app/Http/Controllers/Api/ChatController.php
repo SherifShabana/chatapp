@@ -18,9 +18,11 @@ use App\Http\Resources\MessageResource;
 use App\Http\Resources\SectionResource;
 use App\Http\Resources\YearLevelResource;
 use App\Http\Resources\DepartmentResource;
+use App\Traits\FCMnotification;
 
 class ChatController extends Controller
 {
+    use FCMnotification;
     //!Get all students
     public function getStudents(Request $request)
     {
@@ -65,6 +67,22 @@ class ChatController extends Controller
 
         $student = Student::find($request->student_id);
 
+        $adminName = auth('sanctum')->user()->name;
+
+        $title = 'New Message from ' . $adminName;
+
+        $body = $request->message;
+
+        $token = [$student->token];
+
+        $data = [
+            'sender' => $adminName,
+            'receiver' => $student->name,
+        ];
+
+        $notification = $this->notifyByFirebase($title, $body, $token, $data);
+
+
         //*Check if a channel already exists for this student 
         $channel = $student->channels()->whereHas('participants', function ($query) {
             $query->where('user_id', auth('sanctum')->user()->id);
@@ -86,19 +104,19 @@ class ChatController extends Controller
             ]);
         }
 
-        //*If the size is bigger than limit return this response
+        /* //*If the size is bigger than limit return this response
         if ($request->hasFile('file') && $request->file('file')->getSize() > 39 * 1024 * 1024) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'File size is bigger than limit',
             ]);
-        }
+        } */
 
 
         //*Store the uploaded file
         $fileUrl = null;
         $messageType = 1; //*Initialize the message type as 1
-        if ($request->hasFile('file')) {
+        /*  if ($request->hasFile('file')) {
             $file = $request->file('file');
             $fileUrl = $file->storeAs('uploads', $file->hashName(), 'public');
 
@@ -114,7 +132,7 @@ class ChatController extends Controller
         //*Check for a link
         if (Str::contains($request->message, 'https://') || Str::contains($request->message, 'http://')) {
             $messageType = 4; //*Link
-        }
+        } */
 
         $user = auth('sanctum')->user()->id;
         $messageData = [
@@ -136,12 +154,13 @@ class ChatController extends Controller
         MessageSent::dispatch($message->load('channel.participants'));
 
 
-
         //*Return successful response
+
         return response()->json([
             'status' => 'success',
             'message' => 'Message sent',
             'data' => new MessageResource($message),
+            $notification
         ]);
     }
 
@@ -155,6 +174,7 @@ class ChatController extends Controller
             'message' => 'nullable',
             'file' => 'nullable|file|max:40960'
         ]);
+
 
         //*Create the group if it doesn't exist
         $group = Group::where('name', $request->group_name)->first();
@@ -200,7 +220,7 @@ class ChatController extends Controller
         //* Store the uploaded file
         $fileUrl = null;
         $messageType = 1; //* Initialize the message type as 1
-        if ($request->hasFile('file')) {
+        /* if ($request->hasFile('file')) {
             $file = $request->file('file');
             $fileUrl = $file->storeAs('uploads', $file->hashName(), 'public');
 
@@ -216,7 +236,7 @@ class ChatController extends Controller
         //* Check for a link
         if (Str::contains($request->message, 'https://') || Str::contains($request->message, 'http://')) {
             $messageType = 4; //* Link
-        }
+        } */
 
         $user = auth('sanctum')->user()->id;
         $messageData = [
@@ -238,6 +258,20 @@ class ChatController extends Controller
         MessageSent::dispatch($message->load('channel.participants'));
 
 
+        $adminName = auth('sanctum')->user()->name;
+
+        $title = 'New Message from ' . $adminName;
+
+        $body = $request->message;
+
+        $token = $group->students()->pluck('token')->toArray();
+
+        $data = [
+            'sender' => $adminName,
+        ];
+
+        $notification = $this->notifyByFirebase($title, $body, $token, $data);
+
         //*Return successful response
         return response()->json([
             'status' => 'success',
@@ -246,6 +280,7 @@ class ChatController extends Controller
                 'group' => new GroupResource($group),
                 'message' => new MessageResource($message),
             ],
+            $notification
         ]);
     }
 
@@ -262,17 +297,17 @@ class ChatController extends Controller
 
 
         //*If the size is bigger than limit return this response
-        if ($request->hasFile('file') && $request->file('file')->getSize() > 39 * 1024 * 1024) {
+        /* if ($request->hasFile('file') && $request->file('file')->getSize() > 39 * 1024 * 1024) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'File size is bigger than limit',
             ]);
-        }
+        } */
 
         //* Store the uploaded file
         $fileUrl = null;
         $messageType = 1; //* Initialize the message type as 1
-        if ($request->hasFile('file')) {
+        /* if ($request->hasFile('file')) {
             $file = $request->file('file');
             $fileUrl = $file->storeAs('uploads', $file->hashName(), 'public');
 
@@ -288,11 +323,27 @@ class ChatController extends Controller
         //* Check for a link
         if (Str::contains($request->message, 'https://') || Str::contains($request->message, 'http://')) {
             $messageType = 4; //* Link
-        }
+        } */
 
 
         if ($request->section_id) {
             $sections = Section::find($request->section_id);
+            $students = $sections->students()->get();
+
+            $adminName = auth('sanctum')->user()->name;
+
+            $title = 'New Message from ' . $adminName;
+
+            $body = $request->message;
+
+            $token = $students->pluck('token')->toArray();
+
+            $data = [
+                'sender' => $adminName,
+            ];
+
+            $notification = $this->notifyByFirebase($title, $body, $token, $data);
+
             //* If there is an array of sections
             foreach ($sections as $section) {
                 //*Check if a channel already exists for this section 
@@ -336,12 +387,14 @@ class ChatController extends Controller
                 MessageSent::dispatch($message->load('channel.participants'));
             }
 
+
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Message sent successfully',
                 'data' => MessageResource::collection($messages),
                 'sections' => SectionResource::collection($sections),
-
+                $notification
             ]);
         } elseif ($request->level_id) {
             $yLevel = YearLevel::find($request->level_id);

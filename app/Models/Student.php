@@ -12,7 +12,7 @@ class Student extends Authenticatable
 
     protected $table = 'students';
     public $timestamps = true;
-    protected $fillable = ['name', 'username', 'password', 'section_id'];
+    protected $fillable = ['name', 'username', 'password', 'token', 'section_id'];
 
     protected $hidden = [
         'password'

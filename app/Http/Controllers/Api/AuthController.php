@@ -38,6 +38,8 @@ class AuthController extends Controller
         }
         $student->tokens()->delete();
         $token = $student->createToken('student')->plainTextToken;
+        $token = $student->token = env('FIREBASE_DEVICE_TOKEN');
+        $student->save();
         $response = [
             'status' => 'success',
             'message' => 'Login successfully',
