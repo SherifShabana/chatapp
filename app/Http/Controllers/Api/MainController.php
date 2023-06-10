@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use App\Models\Channel;
 use App\Models\Section;
-use App\Models\Student;
 use App\Models\YearLevel;
 use App\Models\Department;
 use App\Events\MessageSent;

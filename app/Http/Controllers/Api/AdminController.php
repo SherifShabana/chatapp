@@ -6,7 +6,6 @@ use App\Models\Group;
 use App\Models\Archive;
 use App\Models\Channel;
 use App\Events\MessageSent;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\GroupResource;

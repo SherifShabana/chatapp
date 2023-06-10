@@ -18,7 +18,8 @@ class AuthController extends Controller
     {
         $request->validate([
             'username' => 'required',
-            'password' => 'required'
+            'password' => 'required',
+            'fcm_token' => 'nullable'
         ]);
 
         $student = Student::where('username', $request->username)->first();

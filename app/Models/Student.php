@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class Student extends Authenticatable
 {
@@ -19,10 +18,7 @@ class Student extends Authenticatable
         'password'
     ];
 
-    public function tokens()
-    {
-        return $this->hasMany(PersonalAccessToken::class,'tokenable_id');
-    }
+
     public function channels()
     {
         return $this->morphMany(Channel::class, 'chattable');

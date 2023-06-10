@@ -3,8 +3,7 @@
 namespace App\Listeners;
 
 use App\Traits\FCMnotification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+
 
 class SendFCMNotificationForMessage
 {

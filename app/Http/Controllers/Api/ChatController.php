@@ -10,7 +10,6 @@ use App\Models\Student;
 use App\Models\YearLevel;
 use App\Models\Department;
 use App\Events\MessageSent;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\GroupResource;
