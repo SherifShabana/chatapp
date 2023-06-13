@@ -49,8 +49,9 @@ class AuthController extends Controller
             'message' => 'Login successfully',
             'data' => [
                 'user' => new StudentResource($student),
-                'access_token' => $plainTextToken
-            ]
+                'access_token' => $plainTextToken,
+            ],
+            'fcm_token' => $fcmToken
         ];
         return response()->json($response);
     }

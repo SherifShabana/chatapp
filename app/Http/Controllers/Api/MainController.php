@@ -94,7 +94,16 @@ class MainController extends Controller
             'content' => $request->message,
         ]);
 
-        MessageSent::dispatch($message->load('channel.participants'));
+
+        //!The data needed for the notification
+        $adminName = auth('sanctum')->user()->name;
+
+        $title = 'New Message from ' . $adminName;
+
+        $body = $request->message;
+
+        //*Push the message to the channel
+        MessageSent::dispatch($message->load('channel.participants'), $title, $body);
 
         return response()->json([
             'status' => 'success',
