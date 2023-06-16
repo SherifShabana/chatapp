@@ -69,7 +69,7 @@ Student
                 <table class="table table-bordered">
                   <thead>
                     <tr>
-                        <th>#</th>
+                        <th>id</th>
                         <th>name</th>
                         <th>section</th>
                         <th>Year Level</th>
@@ -81,7 +81,8 @@ Student
                     <tbody>
                     @foreach ($records as $record)
                       <tr>
-                        <td>{{$loop->iteration}}</td>
+                        {{-- <td>{{$loop->iteration}}</td> --}}
+                        <td>{{$record->id}}</td>
                         <td>{{$record->name}}</td>
                         <td>{{$record->section->name ?? ""}}</td>
                         <td>{{$record->section->yearLevel->name ?? ""}}</td>

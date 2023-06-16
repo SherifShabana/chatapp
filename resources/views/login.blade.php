@@ -19,9 +19,7 @@
     <body class="login-page" style="min-height: 495.6px;">
         <div class="login-box">
           <div class="login-logo">
-            <a href="{{  url('/') }}"">
-                <b>chatapp</b>
-            </a>
+            <a href="{{  url('/') }}><b>chatapp</b></a>
           </div>
           <!-- /.login-logo -->
           <div class="card">
@@ -29,9 +27,8 @@
               <p class="login-box-msg">Sign in to start</p>
 
               <form action="{{ route('login') }}" method="post">
-                @csrf
                 <div class="input-group mb-3">
-                  <input type="email" class="form-control" placeholder="Email" name="email">
+                  <input type="email" class="form-control" placeholder="Email">
                   <div class="input-group-append">
                     <div class="input-group-text">
                       <span class="fas fa-envelope"></span>
@@ -39,7 +36,7 @@
                   </div>
                 </div>
                 <div class="input-group mb-3">
-                  <input type="password" class="form-control" placeholder="Password" name="password">
+                  <input type="password" class="form-control" placeholder="Password">
                   <div class="input-group-append">
                     <div class="input-group-text">
                       <span class="fas fa-lock"></span>
@@ -49,6 +46,10 @@
                 <div class="row">
                   <div class="col-8">
                     <div class="icheck-primary">
+                      <input type="checkbox" id="remember">
+                      <label for="remember">
+                        Remember Me
+                      </label>
                     </div>
                   </div>
                   <!-- /.col -->
@@ -66,6 +67,7 @@
         <!-- /.login-box -->
 
         <!-- jQuery -->
+        <script src="{{ asset('')}}"></script>
         <!-- Bootstrap 4 -->
         <script src="adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
         <!-- AdminLTE App -->

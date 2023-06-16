@@ -9,14 +9,20 @@
     <label for="username">username</label>
     {!! Form::text('username',null,['class'=> 'form-control']) !!}
  </div>
- 
+
  <div class="form-group">
-    <label for="username">id</label>
-    {!! Form::text('username',null,['class'=> 'form-control']) !!}
+    <label for="Email">E-mail</label>
+    {!! Form::email('email',null,['class'=> 'form-control']) !!}
  </div>
 
+ <div class="form-group">
+    <label for="password">password</label>
+    {!! Form::password('password',['class'=> 'form-control']) !!}
+ </div>
+ <input type="hidden" name="role" value="1">
 
-<div class="form-group">
+
+{{-- <div class="form-group">
     <label for="name">Department</label>
     {!! Form::select('department_id',$departments,$model->section->yearLevel->department_id ?? null,[
         'class'=> 'form-control',
@@ -39,7 +45,7 @@
         'id' => 'sections',
         'placeholder' => 'Choose Year section'
         ]) !!}
- </div>
+ </div> --}}
 
 <div class="form-group">
     <button class="btn btn-primary" type="submit">submit</button>
